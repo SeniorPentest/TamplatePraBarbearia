@@ -900,6 +900,15 @@ select, input, textarea { font-family: inherit; }
 .channel-link:hover { gap: 8px; }
 
 /* ===========================
+   /* ===========================
+   CLUB TIERS
+=========================== */
+.club-tiers {
+    padding: 96px 0;
+    background: var(--light-bg);
+}
+
+/* ===========================
    LOYALTY
 =========================== */
 .loyalty {
