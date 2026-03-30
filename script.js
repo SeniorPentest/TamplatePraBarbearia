@@ -9,11 +9,26 @@ const prevBtn = document.querySelector('.carousel-btn-prev');
 const nextBtn = document.querySelector('.carousel-btn-next');
 const dotsContainer = document.querySelector('.carousel-dots');
 
+function initSnackImageFallbacks() {
+    const images = document.querySelectorAll('.snack-card-img img[data-fallback]');
+    images.forEach(img => {
+        img.addEventListener('error', () => {
+            const fallback = img.dataset.fallback;
+            if (fallback) {
+                img.src = fallback;
+                img.removeAttribute('data-fallback');
+            }
+        }, { once: true });
+    });
+}
+
 function initCarousel() {
     if (!carousel || !carouselWrapper) return;
 
     const cards = carousel.querySelectorAll('.snack-card');
     const totalSlides = cards.length;
+    const carouselMobileBreakpoint = 700;
+    const mobileQuery = window.matchMedia(`(max-width: ${carouselMobileBreakpoint}px)`);
 
     // Create dots
     if (dotsContainer) {
@@ -29,8 +44,12 @@ function initCarousel() {
 
     // Update carousel position
     function updateCarousel() {
-        const cardWidth = cards[0].offsetWidth + 24; // card width + gap
-        carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+        if (mobileQuery.matches) {
+            carousel.style.transform = 'none';
+        } else {
+            const cardWidth = cards[0].offsetWidth + 24; // card width + gap
+            carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+        }
 
         // Update dots
         if (dotsContainer) {
@@ -41,8 +60,8 @@ function initCarousel() {
         }
 
         // Update button states
-        if (prevBtn) prevBtn.disabled = currentSlide === 0;
-        if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
+        if (prevBtn) prevBtn.disabled = mobileQuery.matches || currentSlide === 0;
+        if (nextBtn) nextBtn.disabled = mobileQuery.matches || currentSlide === totalSlides - 1;
     }
 
     function goToSlide(index) {
@@ -67,44 +86,6 @@ function initCarousel() {
     // Event listeners
     if (prevBtn) prevBtn.addEventListener('click', prevSlide);
     if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-
-    // Auto-play carousel
-    let autoplayInterval = setInterval(nextSlide, 4000);
-
-    // Pause autoplay on hover
-    if (carouselWrapper) {
-        carouselWrapper.addEventListener('mouseenter', () => {
-            clearInterval(autoplayInterval);
-        });
-
-        carouselWrapper.addEventListener('mouseleave', () => {
-            autoplayInterval = setInterval(nextSlide, 4000);
-        });
-    }
-
-    // Loop carousel
-    function loopCarousel() {
-        if (currentSlide === totalSlides - 1) {
-            currentSlide = 0;
-        } else {
-            currentSlide++;
-        }
-        updateCarousel();
-    }
-
-    // Replace simple nextSlide with looping version for autoplay
-    clearInterval(autoplayInterval);
-    autoplayInterval = setInterval(loopCarousel, 4000);
-
-    if (carouselWrapper) {
-        carouselWrapper.addEventListener('mouseenter', () => {
-            clearInterval(autoplayInterval);
-        });
-
-        carouselWrapper.addEventListener('mouseleave', () => {
-            autoplayInterval = setInterval(loopCarousel, 4000);
-        });
-    }
 
     // Handle window resize
     window.addEventListener('resize', updateCarousel);
@@ -266,6 +247,7 @@ function setFormStatus(msg, type) {
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize carousel
     initCarousel();
+    initSnackImageFallbacks();
 
     // Add reveal class to cards and sections
     const targets = document.querySelectorAll(
