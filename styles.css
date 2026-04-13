@@ -1,16 +1,18 @@
+/* ===========================
+   RESET & VARIÁVEIS
+=========================== */
 :root {
     --red: #C4292A;
     --dark: #1A1A1A;
     --white: #ffffff;
     --border: #e4dfd4;
     --radius-xl: 32px;
-    --transition: .25s ease;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; background: #FAFAF6; overflow-x: hidden; }
+body { font-family: 'Inter', sans-serif; background: #FAFAF6; overflow-x: hidden; color: #1A1A1A; }
 
-/* ESTRUTURA CARROSSEL */
+/* ESTRUTURA DO CARROSSEL */
 .carousel-wrapper {
     position: relative;
     width: 100%;
@@ -52,6 +54,7 @@ body { font-family: 'Inter', sans-serif; background: #FAFAF6; overflow-x: hidden
     z-index: 2;
 }
 
+/* SELO MAIS POPULAR */
 .plan-badge {
     position: absolute;
     top: -15px;
@@ -65,9 +68,7 @@ body { font-family: 'Inter', sans-serif; background: #FAFAF6; overflow-x: hidden
     font-weight: 800;
 }
 
-.value-icon { font-size: 2.5rem; margin-bottom: 15px; text-align: center; }
-
-/* RESPONSIVO */
+/* RESPONSIVO (PC E CELULAR) */
 @media (max-width: 900px) {
     .plan-card-featured { transform: scale(1); }
     .plans-grid, .values-grid { flex-wrap: wrap; justify-content: center; }
