@@ -1506,9 +1506,12 @@ select, input, textarea { font-family: inherit; }
     .compliance-seals { grid-template-columns: 1fr 1fr; }
 
     .snacks-carousel-wrapper { padding: 0; }
-    .snacks-carousel,
-    .snacks-carousel.is-carousel {
+    .snacks-carousel {
         flex-wrap: wrap;
+        overflow: visible;
+    }
+    .snacks-carousel.is-carousel {
+        flex-wrap: nowrap;
         overflow: visible;
     }
     .snack-card { width: 100%; }

@@ -26,21 +26,21 @@ function initCarousel() {
         }
     }
 
+    const getCarouselMetrics = () => {
+        const cardWidth = cards[0].offsetWidth + 24; // Largura + Gap
+        const visibleCards = Math.max(1, Math.round(carouselWrapper.offsetWidth / cardWidth));
+        const maxIndex = Math.max(0, totalSlides - visibleCards);
+        return { cardWidth, maxIndex };
+    };
+
     // 2. Lógica de Movimentação e Limite (Fix do Espaço Branco)
     function updateCarousel() {
-        const isMobile = window.innerWidth <= 700;
-        if (isMobile) {
-            carousel.style.transform = 'none';
-        } else {
-            const cardWidth = cards[0].offsetWidth + 24; // Largura + Gap
-            const visibleCards = Math.round(carouselWrapper.offsetWidth / cardWidth);
-            const maxIndex = totalSlides - visibleCards;
+        const { cardWidth, maxIndex } = getCarouselMetrics();
 
-            // Ajuste de segurança: se o slide ultrapassar o limite visual, trava no máximo
-            if (currentSlide > maxIndex) currentSlide = maxIndex;
+        // Ajuste de segurança: se o slide ultrapassar o limite visual, trava no máximo
+        if (currentSlide > maxIndex) currentSlide = maxIndex;
 
-            carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
-        }
+        carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
 
         // Atualizar Dots
         if (dotsContainer) {
@@ -51,9 +51,7 @@ function initCarousel() {
 
     // 3. Funções de Avanço e Recuo (Loop Infinito)
     function nextSlide() {
-        const cardWidth = cards[0].offsetWidth + 24;
-        const visibleCards = Math.round(carouselWrapper.offsetWidth / cardWidth);
-        const maxIndex = totalSlides - visibleCards;
+        const { maxIndex } = getCarouselMetrics();
 
         // Se chegar no limite de exibição, volta ao início (0)
         currentSlide = (currentSlide >= maxIndex) ? 0 : currentSlide + 1;
