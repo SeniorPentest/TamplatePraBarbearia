@@ -1,10 +1,28 @@
 /* ===========================
-   GLOBAL CAROUSEL UTILS
+   VARIÁVEIS E RESET
+=========================== */
+:root {
+    --red: #C4292A;
+    --dark: #1A1A1A;
+    --beige: #F5EFE0;
+    --white: #ffffff;
+    --border: #e4dfd4;
+    --muted: #7a7a7a;
+    --radius-xl: 32px;
+    --transition: .25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAF6; color: var(--dark); overflow-x: hidden; }
+img { display: block; max-width: 100%; }
+
+/* ===========================
+   MOTOR DO CARROSSEL
 =========================== */
 .carousel-wrapper {
     position: relative;
     width: 100%;
-    overflow: hidden; /* Moldura do sistema */
+    overflow: hidden;
     padding: 20px 0;
 }
 
@@ -12,73 +30,16 @@
     display: flex;
     gap: 24px;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
 }
 
 /* ===========================
-   PLANS & VALUES (Grid Fix)
+   PLANOS E VALORES (Simetria 1x3)
 =========================== */
 .plans-grid, .values-grid {
     display: grid;
- codex/upgrade-icons-in-sections
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    align-items: stretch;
-}
-.value-card {
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    padding: 32px 24px;
-    text-align: center;
-    border: 1px solid var(--border);
-    transition: box-shadow var(--transition), transform var(--transition);
-}
-.value-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-4px);
-}
-.value-icon {
-    margin-bottom: 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-.value-icon svg {
-    width: 56px;
-    height: 56px;
-    stroke: var(--red);
-    stroke-width: 2.25;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-.value-card h3 {
-    font-size: .98rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--dark);
-}
-.value-card p {
-    font-size: .85rem;
-    color: var(--muted);
-    line-height: 1.6;
-}
-
-/* ===========================
-   PROGRAMS
-=========================== */
-.programs {
-    padding: 96px 0;
-    background: var(--white);
-}
-.programs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-=======
-    grid-template-columns: repeat(3, 1fr); /* Matriz 1x3 perfeita */
- main
+    grid-template-columns: repeat(3, 1fr); /* Divisão exata em 3 colunas */
     gap: 24px;
-    align-items: stretch; /* Garante altura uniforme */
+    align-items: stretch; /* Garante altura uniforme nas cases */
 }
 
 .plan-card, .value-card {
@@ -96,11 +57,11 @@
 .plan-card-featured {
     background: var(--red);
     color: var(--white);
-    transform: scale(1.05); /* Destaque mecânico */
+    transform: scale(1.05); /* Destaque visual */
     z-index: 2;
 }
 
-/* Fix do Selo "Mais Popular" */
+/* Selo "Mais Popular" */
 .plan-badge {
     position: absolute;
     top: -15px;
@@ -113,10 +74,9 @@
     font-size: 0.75rem;
     font-weight: 800;
     white-space: nowrap;
-    box-shadow: var(--shadow-sm);
 }
 
-/* Ajuste dos ícones SVG em vermelho */
+/* Ícones SVG em Vermelho */
 .value-icon svg {
     width: 48px;
     height: 48px;
@@ -127,22 +87,20 @@
 }
 
 /* ===========================
-   RESPONSIVE (Mobile Carousel)
+   RESPONSIVIDADE (Ajuste de Malha)
 =========================== */
 @media (max-width: 900px) {
     .plan-card-featured { transform: scale(1); }
+    .plans-grid, .values-grid { grid-template-columns: 1fr; } /* Empilha no Tablet */
 }
 
 @media (max-width: 700px) {
     .plans-grid, .values-grid, .snacks-carousel {
         display: flex;
-        flex-wrap: nowrap; /* Trava em linha para o carrossel */
+        flex-wrap: nowrap; /* Força o carrossel no celular */
         gap: 20px;
     }
-
     .plan-card, .value-card, .snack-card {
-        min-width: 100%; /* Um por vez no celular */
+        min-width: 100%; /* Um card por vez na tela */
     }
-    
-    .carousel-btn, .carousel-dots { display: none; }
 }
