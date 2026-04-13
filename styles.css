@@ -1,24 +1,16 @@
-/* ===========================
-   VARIÁVEIS E RESET
-=========================== */
 :root {
     --red: #C4292A;
     --dark: #1A1A1A;
-    --beige: #F5EFE0;
     --white: #ffffff;
     --border: #e4dfd4;
-    --muted: #7a7a7a;
     --radius-xl: 32px;
     --transition: .25s ease;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; background: #FAFAF6; color: var(--dark); overflow-x: hidden; }
-img { display: block; max-width: 100%; }
+body { font-family: 'Inter', sans-serif; background: #FAFAF6; overflow-x: hidden; }
 
-/* ===========================
-   MOTOR DO CARROSSEL
-=========================== */
+/* ESTRUTURA CARROSSEL */
 .carousel-wrapper {
     position: relative;
     width: 100%;
@@ -26,42 +18,40 @@ img { display: block; max-width: 100%; }
     padding: 20px 0;
 }
 
-.carousel-track {
+.carousel-track, .snacks-carousel {
     display: flex;
     gap: 24px;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.5s ease;
 }
 
-/* ===========================
-   PLANOS E VALORES (Simetria 1x3)
-=========================== */
+/* ALINHAMENTO PLANOS E VALORES */
 .plans-grid, .values-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Divisão exata em 3 colunas */
-    gap: 24px;
-    align-items: stretch; /* Garante altura uniforme nas cases */
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
 }
 
 .plan-card, .value-card {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
     display: flex;
     flex-direction: column;
-    height: 100%;
     position: relative;
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
     padding: 40px 30px;
-    transition: var(--transition);
+    overflow: visible;
 }
 
 .plan-card-featured {
     background: var(--red);
     color: var(--white);
-    transform: scale(1.05); /* Destaque visual */
+    transform: scale(1.05);
     z-index: 2;
 }
 
-/* Selo "Mais Popular" */
 .plan-badge {
     position: absolute;
     top: -15px;
@@ -73,34 +63,21 @@ img { display: block; max-width: 100%; }
     border-radius: 99px;
     font-size: 0.75rem;
     font-weight: 800;
-    white-space: nowrap;
 }
 
-/* Ícones SVG em Vermelho */
-.value-icon svg {
-    width: 48px;
-    height: 48px;
-    fill: none;
-    stroke: var(--red);
-    stroke-width: 1.5;
-    margin-bottom: 20px;
-}
+.value-icon { font-size: 2.5rem; margin-bottom: 15px; text-align: center; }
 
-/* ===========================
-   RESPONSIVIDADE (Ajuste de Malha)
-=========================== */
+/* RESPONSIVO */
 @media (max-width: 900px) {
     .plan-card-featured { transform: scale(1); }
-    .plans-grid, .values-grid { grid-template-columns: 1fr; } /* Empilha no Tablet */
+    .plans-grid, .values-grid { flex-wrap: wrap; justify-content: center; }
 }
 
 @media (max-width: 700px) {
     .plans-grid, .values-grid, .snacks-carousel {
         display: flex;
-        flex-wrap: nowrap; /* Força o carrossel no celular */
+        flex-wrap: nowrap;
         gap: 20px;
     }
-    .plan-card, .value-card, .snack-card {
-        min-width: 100%; /* Um card por vez na tela */
-    }
+    .plan-card, .value-card, .snack-card { min-width: 100%; }
 }
