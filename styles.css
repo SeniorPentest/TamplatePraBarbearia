@@ -753,9 +753,9 @@ select, input, textarea { font-family: inherit; }
 }
 .values-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(200px, 320px));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    justify-content: center;
+    align-items: stretch;
 }
 .value-card {
     background: var(--white);
@@ -875,6 +875,9 @@ select, input, textarea { font-family: inherit; }
 .subscriptions {
     padding: 96px 0;
     background: var(--beige);
+}
+.plans-carousel-wrapper {
+    overflow: hidden;
 }
 .plans-grid {
     display: grid;
@@ -1502,7 +1505,30 @@ select, input, textarea { font-family: inherit; }
     .footer-bottom { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
     .footer-location { justify-content: center; }
 
-    .plans-grid { grid-template-columns: 1fr; }
+    .plans-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 20px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    .plan-card {
+        min-width: 100%;
+        scroll-snap-align: start;
+    }
+    .values-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 20px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    .value-card {
+        min-width: 100%;
+        scroll-snap-align: start;
+    }
     .compliance-seals { grid-template-columns: 1fr 1fr; }
 
     .snacks-carousel-wrapper { padding: 0; }
@@ -1523,7 +1549,6 @@ select, input, textarea { font-family: inherit; }
     .hero-title { font-size: 2.6rem; }
     .snacks-grid, .channels-grid { grid-template-columns: 1fr; }
     .programs-grid { grid-template-columns: 1fr; }
-    .values-grid { grid-template-columns: 1fr 1fr; }
     .loyalty-card { width: 100%; }
 
 }
