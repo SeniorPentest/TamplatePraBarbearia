@@ -1,4 +1,3 @@
- codex/refactor-init-carousel-function
 // Função principal do Carrossel
 function initCarousel(containerSelector) {
     const carouselWrapper = document.querySelector(containerSelector);
@@ -15,12 +14,12 @@ function initCarousel(containerSelector) {
     const nextBtn = carouselWrapper.querySelector('.carousel-btn-next');
     const dotsContainer = carouselWrapper.querySelector('.carousel-dots');
 
-    let currentSlide = 0; // Variável local para evitar conflitos
+    let currentSlide = 0;
     let autoplayId = null;
 
     carousel.classList.add('is-carousel');
 
-    // 1. Criar pontos de navegação
+    // Criar pontos de navegação
     if (dotsContainer) {
         dotsContainer.innerHTML = '';
         for (let i = 0; i < totalSlides; i++) {
@@ -39,47 +38,34 @@ function initCarousel(containerSelector) {
     };
 
     const getCarouselMetrics = () => {
-        const cardWidth = cards[0].offsetWidth + getGap(); // Largura + Gap
+        const cardWidth = cards[0].offsetWidth + getGap();
         const visibleCards = Math.max(1, Math.round(carouselWrapper.offsetWidth / cardWidth));
-
-function initCarousel(wrapperSelector, trackSelector, cardSelector) {
-    const wrapper = document.querySelector(wrapperSelector);
-    const track = document.querySelector(trackSelector);
-    if (!wrapper || !track) return;
-
-    const cards = track.querySelectorAll(cardSelector);
-    const totalSlides = cards.length;
-    let currentSlide = 0;
-    let autoplayId = null;
-
-    const getMetrics = () => {
-        const cardWidth = cards[0].offsetWidth + 24; 
-        const visibleCards = Math.round(wrapper.offsetWidth / cardWidth);
- main
         const maxIndex = Math.max(0, totalSlides - visibleCards);
         return { cardWidth, maxIndex };
     };
 
     function updateCarousel() {
-        const { cardWidth, maxIndex } = getMetrics();
+        const { cardWidth, maxIndex } = getCarouselMetrics();
         if (currentSlide > maxIndex) currentSlide = maxIndex;
-        track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+        carousel.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+        if (dotsContainer) {
+            const dots = dotsContainer.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
+        }
     }
 
     function nextSlide() {
-        const { maxIndex } = getMetrics();
+        const { maxIndex } = getCarouselMetrics();
         currentSlide = (currentSlide >= maxIndex) ? 0 : currentSlide + 1;
         updateCarousel();
     }
 
- codex/refactor-init-carousel-function
     function prevSlide() {
         const { maxIndex } = getCarouselMetrics();
         currentSlide = (currentSlide > 0) ? currentSlide - 1 : maxIndex;
         updateCarousel();
     }
 
-    // 4. Autoplay (Girar Sozinho)
     const startAutoplay = () => {
         stopAutoplay();
         autoplayId = setInterval(nextSlide, 3000);
@@ -91,32 +77,58 @@ function initCarousel(wrapperSelector, trackSelector, cardSelector) {
 
     const resetAutoplay = () => { stopAutoplay(); startAutoplay(); };
 
-    const startAutoplay = () => { autoplayId = setInterval(nextSlide, 3500); };
-    const stopAutoplay = () => { if (autoplayId) clearInterval(autoplayId); };
- main
-
-    wrapper.addEventListener('mouseenter', stopAutoplay);
-    wrapper.addEventListener('mouseleave', startAutoplay);
+    if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
     window.addEventListener('resize', updateCarousel);
+    carouselWrapper.addEventListener('mouseenter', stopAutoplay);
+    carouselWrapper.addEventListener('mouseleave', startAutoplay);
 
     updateCarousel();
     startAutoplay();
 }
 
+// Inicialização Global
 document.addEventListener('DOMContentLoaded', () => {
- codex/refactor-init-carousel-function
     initCarousel('.snacks-carousel-wrapper');
     initCarousel('.plans-wrapper');
     initCarousel('.values-wrapper');
-    // Fallback de imagens (mantido do original)
+
+    // Fallback de imagens
     document.querySelectorAll('.snack-card-img img[data-fallback]').forEach(img => {
         img.addEventListener('error', () => {
             if (img.dataset.fallback) { img.src = img.dataset.fallback; img.removeAttribute('data-fallback'); }
         }, { once: true });
     });
 
-    initCarousel('.snacks-carousel-wrapper', '.snacks-carousel', '.snack-card');
-    initCarousel('.plans-carousel-wrapper', '.plans-grid', '.plan-card');
-    initCarousel('.values-wrapper', '.values-grid', '.value-card');
- main
+    // Header scroll
+    const header = document.getElementById('header');
+    if (header) {
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 20);
+        });
+    }
+
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            navLinks.classList.toggle('open');
+            hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+        });
+    }
+
+    // Contact form
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('form-status');
+    if (form && status) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            status.textContent = 'Mensagem enviada com sucesso!';
+            status.className = 'form-status success';
+            form.reset();
+            setTimeout(() => { status.textContent = ''; status.className = 'form-status'; }, 4000);
+        });
+    }
 });
