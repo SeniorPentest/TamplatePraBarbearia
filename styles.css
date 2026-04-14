@@ -339,6 +339,36 @@ select, input, textarea { font-family: inherit; }
 .snack-price { display: flex; flex-direction: column; gap: 2px; }
 .price-from { font-size: .72rem; color: var(--muted); }
 .price-value { font-size: 1.2rem; font-weight: 800; color: var(--dark); }
+.cart-panel {
+    margin-top: 28px;
+    background: var(--light-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+.cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; }
+.cart-header h3 { margin: 4px 0 0; }
+.cart-total { font-weight: 900; font-size: 1.2rem; color: var(--dark); }
+.cart-items { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.cart-item {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 10px 14px; gap: 10px;
+}
+.cart-item-name { font-weight: 600; color: var(--dark); }
+.cart-item-meta { font-size: .87rem; color: var(--mid); }
+.cart-empty { margin: 0; color: var(--muted); font-size: .9rem; }
+.add-to-cart-btn { margin-top: 8px; width: 100%; }
+.cart-remove {
+    background: none;
+    border: none;
+    color: var(--primary-blue);
+    cursor: pointer;
+    font-weight: 700;
+    padding: 6px 8px;
+}
+.cart-remove:hover { text-decoration: underline; }
 
 /* ===========================
    VALUES
@@ -476,6 +506,25 @@ select, input, textarea { font-family: inherit; }
 .loyalty-badges { display: flex; gap: 12px; }
 .lbadge { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); border-radius: var(--radius-md); padding: 8px 14px; font-size: .82rem; font-weight: 600; }
 .lbadge-active { background: rgba(27,152,224,.3); border-color: var(--primary-blue); color: var(--white); }
+.auth-card {
+    width: 100%;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.auth-card h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.auth-card .form-group label { color: rgba(255,255,255,.8); }
+.auth-card .form-group input { background: rgba(255,255,255,.08); color: var(--white); border-color: rgba(255,255,255,.16); }
+.auth-card .form-group input::placeholder { color: rgba(255,255,255,.5); }
+.auth-card .form-group input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0,100,148,.2); background: rgba(255,255,255,.12); }
+.auth-card .form-status { text-align: left; min-height: 20px; }
+.auth-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.auth-actions .btn { flex: 1; justify-content: center; }
 
 /* ===========================
    COMPLIANCE

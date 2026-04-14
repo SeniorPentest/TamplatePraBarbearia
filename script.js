@@ -1,3 +1,24 @@
+// Supabase configuration
+const supabaseUrl = 'SUA_SUPABASE_URL';
+const supabaseAnonKey = 'SUA_SUPABASE_ANON_KEY';
+const hasSupabaseConfig = Boolean(
+    supabaseUrl &&
+    supabaseAnonKey &&
+    !supabaseUrl.includes('SUA_SUPABASE_URL') &&
+    !supabaseAnonKey.includes('SUA_SUPABASE_ANON_KEY')
+);
+const supabaseClient = (typeof supabase !== 'undefined' && hasSupabaseConfig)
+    ? supabase.createClient(supabaseUrl, supabaseAnonKey)
+    : null;
+
+const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+const formatCurrency = (value = 0) => currencyFormatter.format(Number(value) || 0);
+const parsePrice = (text = '') => {
+    const normalized = text.replace(/[^\d,.-]/g, '').replace(',', '.');
+    const parsed = parseFloat(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
+};
+
 // Carrossel com autoplay (Snacks e Planos)
 function initCarousel(containerSelector) {
     const carouselWrapper = document.querySelector(containerSelector);
@@ -162,6 +183,222 @@ function initDragCarousel(containerSelector) {
     updateDrag();
 }
 
+// Carrinho de compras simples
+function setupCart() {
+    const cartItemsEl = document.getElementById('cart-items');
+    const cartTotalEl = document.getElementById('cart-total');
+    const cartEmptyEl = document.getElementById('cart-empty');
+    if (!cartItemsEl || !cartTotalEl || !cartEmptyEl) return;
+
+    const cartState = new Map();
+
+    const renderCart = () => {
+        cartItemsEl.innerHTML = '';
+        let total = 0;
+        cartState.forEach((item) => {
+            total += item.price * item.qty;
+            const li = document.createElement('li');
+            li.className = 'cart-item';
+
+            const info = document.createElement('div');
+            info.innerHTML = `<div class="cart-item-name">${item.name}</div><div class="cart-item-meta">${item.qty}x ${formatCurrency(item.price)}</div>`;
+
+            const actions = document.createElement('div');
+            actions.style.display = 'flex';
+            actions.style.alignItems = 'center';
+            actions.style.gap = '8px';
+
+            const value = document.createElement('strong');
+            value.textContent = formatCurrency(item.price * item.qty);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'cart-remove';
+            removeBtn.textContent = 'Remover';
+            removeBtn.addEventListener('click', () => {
+                cartState.delete(item.name);
+                renderCart();
+            });
+
+            actions.append(value, removeBtn);
+            li.append(info, actions);
+            cartItemsEl.appendChild(li);
+        });
+
+        cartEmptyEl.style.display = cartState.size ? 'none' : 'block';
+        cartTotalEl.textContent = formatCurrency(total);
+    };
+
+    const addToCart = (item) => {
+        const current = cartState.get(item.name);
+        if (current) {
+            current.qty += 1;
+        } else {
+            cartState.set(item.name, { ...item, qty: 1 });
+        }
+        renderCart();
+    };
+
+    const fallbackProducts = [
+        { name: 'Barra de Frutas', price: 9.9 },
+        { name: 'Granola Premium', price: 14.9 },
+        { name: 'Mix Proteico', price: 19.9 },
+        { name: 'Energético Natural', price: 12.5 },
+        { name: 'Suco Detox', price: 11.5 },
+        { name: 'Snack Multigrãos', price: 8.9 }
+    ];
+
+    document.querySelectorAll('.snacks-carousel .snack-card').forEach((card, index) => {
+        const defaultProduct = fallbackProducts[index % fallbackProducts.length];
+        const name = (card.querySelector('h3')?.textContent || defaultProduct.name).trim();
+        const priceText = card.querySelector('.price-value')?.textContent || '';
+        const parsedPrice = parsePrice(priceText);
+        const price = parsedPrice || defaultProduct.price;
+
+        card.dataset.name = name;
+        card.dataset.price = price;
+
+        const priceEl = card.querySelector('.price-value');
+        if (priceEl) priceEl.textContent = formatCurrency(price);
+
+        let btn = card.querySelector('.add-to-cart-btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-outline-dark add-to-cart-btn';
+            btn.textContent = 'Adicionar ao carrinho';
+            card.appendChild(btn);
+        }
+        btn.addEventListener('click', () => addToCart({ name, price }));
+    });
+
+    renderCart();
+}
+
+// Supabase auth + pontos
+async function ensureClienteRow(user, nome, email) {
+    if (!supabaseClient || !user?.id) return;
+    await supabaseClient.from('clientes').upsert({
+        id: user.id,
+        nome: nome || email || user.email || 'Cliente',
+        email: email || user.email || ''
+    });
+}
+
+async function fetchClienteData(userId) {
+    if (!supabaseClient || !userId) return null;
+    const { data, error } = await supabaseClient
+        .from('clientes')
+        .select('nome, email, pontos')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Erro ao buscar pontos do cliente', error);
+        return null;
+    }
+    return data;
+}
+
+function updateLoyaltyCard(loyaltyNameEl, loyaltyPointsEl, cliente) {
+    if (loyaltyNameEl) loyaltyNameEl.textContent = cliente?.nome || 'Visitante';
+    if (loyaltyPointsEl) loyaltyPointsEl.textContent = (cliente?.pontos ?? 0).toLocaleString('pt-BR');
+}
+
+function setAuthStatus(statusEl, message, isError = false) {
+    if (!statusEl) return;
+    statusEl.textContent = message || '';
+    statusEl.classList.remove('success', 'error');
+    if (message) statusEl.classList.add(isError ? 'error' : 'success');
+}
+
+function setupAuth() {
+    const loyaltyNameEl = document.getElementById('loyalty-name');
+    const loyaltyPointsEl = document.getElementById('loyalty-points');
+    updateLoyaltyCard(loyaltyNameEl, loyaltyPointsEl, { nome: 'Visitante', pontos: 0 });
+
+    const statusEl = document.getElementById('auth-status');
+    const nameInput = document.getElementById('auth-name');
+    const emailInput = document.getElementById('auth-email');
+    const passwordInput = document.getElementById('auth-password');
+    const loginButton = document.getElementById('login-button');
+    const signupButton = document.getElementById('signup-button');
+
+    if (!statusEl || !emailInput || !passwordInput) return;
+
+    if (!supabaseClient) {
+        setAuthStatus(statusEl, 'Informe sua URL e anon key do Supabase em script.js.', true);
+        return;
+    }
+
+    const loadClienteAndCard = async (user) => {
+        if (!user) {
+            updateLoyaltyCard(loyaltyNameEl, loyaltyPointsEl, { nome: 'Visitante', pontos: 0 });
+            return;
+        }
+        const cliente = await fetchClienteData(user.id);
+        if (cliente) {
+            updateLoyaltyCard(loyaltyNameEl, loyaltyPointsEl, cliente);
+        } else {
+            updateLoyaltyCard(loyaltyNameEl, loyaltyPointsEl, { nome: user.email || 'Cliente', pontos: 0 });
+        }
+    };
+
+    loginButton?.addEventListener('click', async () => {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        if (!email || !password) {
+            setAuthStatus(statusEl, 'Preencha e-mail e senha.', true);
+            return;
+        }
+        setAuthStatus(statusEl, 'Entrando...');
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            await ensureClienteRow(data.user, nameInput.value.trim(), email);
+            await loadClienteAndCard(data.user);
+            setAuthStatus(statusEl, 'Login realizado!');
+        } catch (err) {
+            console.error('Erro no login', err);
+            setAuthStatus(statusEl, err.message || 'Não foi possível entrar.', true);
+        }
+    });
+
+    signupButton?.addEventListener('click', async () => {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const nome = nameInput.value.trim();
+        if (!email || !password) {
+            setAuthStatus(statusEl, 'Informe e-mail e senha para cadastrar.', true);
+            return;
+        }
+        setAuthStatus(statusEl, 'Criando conta...');
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) throw error;
+            const user = data.user || data.session?.user;
+            if (user) {
+                await ensureClienteRow(user, nome || email, email);
+                await loadClienteAndCard(user);
+                setAuthStatus(statusEl, 'Cadastro criado! Verifique o e-mail se necessário.');
+            } else {
+                setAuthStatus(statusEl, 'Cadastro iniciado! Confirme o e-mail para continuar.');
+            }
+        } catch (err) {
+            console.error('Erro no cadastro', err);
+            setAuthStatus(statusEl, err.message || 'Não foi possível criar a conta.', true);
+        }
+    });
+
+    supabaseClient.auth.getSession().then(({ data }) => {
+        if (data?.session?.user) loadClienteAndCard(data.session.user);
+    });
+
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+        loadClienteAndCard(session?.user);
+    });
+}
+
 // Inicialização Global
 document.addEventListener('DOMContentLoaded', () => {
     initCarousel('.snacks-carousel-wrapper');
@@ -202,4 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => { formStatus.textContent = ''; formStatus.className = 'form-status'; }, 4000);
         });
     }
+
+    setupCart();
+    setupAuth();
 });

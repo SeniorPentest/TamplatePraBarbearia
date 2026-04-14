@@ -185,6 +185,17 @@
                 </button>
                 <div class="carousel-dots"></div>
             </div>
+            <div class="cart-panel" id="cart-panel">
+                <div class="cart-header">
+                    <div>
+                        <p class="section-tag">Carrinho</p>
+                        <h3>Itens selecionados</h3>
+                    </div>
+                    <div class="cart-total" id="cart-total">R$ 0,00</div>
+                </div>
+                <ul class="cart-items" id="cart-items"></ul>
+                <p class="cart-empty" id="cart-empty">Nenhum item no carrinho ainda.</p>
+            </div>
             <div class="section-cta">
                 <a href="#contact" class="btn btn-primary">Ver todos os produtos</a>
             </div>
@@ -274,11 +285,11 @@
                             <div class="lcard-tier">GOLD</div>
                         </div>
                         <div class="lcard-points">
-                            <span class="lcard-pts-num">12.480</span>
+                            <span class="lcard-pts-num" id="loyalty-points">0</span>
                             <span class="lcard-pts-label">pontos acumulados</span>
                         </div>
                         <div class="lcard-footer">
-                            <span class="lcard-name">Cliente Exemplo</span>
+                            <span class="lcard-name" id="loyalty-name">Visitante</span>
                             <span class="lcard-stars">★★★★☆</span>
                         </div>
                     </div>
@@ -286,6 +297,26 @@
                         <span class="lbadge">Prata</span>
                         <span class="lbadge lbadge-active">Ouro ✓</span>
                         <span class="lbadge">Diamante</span>
+                    </div>
+                    <div class="auth-card" id="auth-card">
+                        <h3>Login / Cadastro</h3>
+                        <div class="form-group">
+                            <label for="auth-name">Nome</label>
+                            <input type="text" id="auth-name" placeholder="Seu nome completo">
+                        </div>
+                        <div class="form-group">
+                            <label for="auth-email">E-mail</label>
+                            <input type="email" id="auth-email" placeholder="voce@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="auth-password">Senha</label>
+                            <input type="password" id="auth-password" placeholder="Mínimo 6 caracteres">
+                        </div>
+                        <div class="auth-actions">
+                            <button type="button" class="btn btn-outline-dark" id="login-button">Entrar</button>
+                            <button type="button" class="btn btn-primary" id="signup-button">Criar conta</button>
+                        </div>
+                        <div class="form-status" id="auth-status"></div>
                     </div>
                 </div>
             </div>
@@ -571,6 +602,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.48.0/dist/umd/supabase.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
