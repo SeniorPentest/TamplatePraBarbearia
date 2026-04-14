@@ -1,6 +1,8 @@
 // Supabase configuration
+// COLOQUE AS SUAS CHAVES AQUI DENTRO DAS ASPAS:
 const supabaseUrl = 'SUA_SUPABASE_URL';
 const supabaseAnonKey = 'SUA_SUPABASE_ANON_KEY';
+
 const hasSupabaseConfig = Boolean(
     supabaseUrl &&
     supabaseAnonKey &&
@@ -240,12 +242,10 @@ function setupCart() {
     };
 
     const fallbackProducts = [
-        { name: 'Barra de Frutas', price: 9.9 },
-        { name: 'Granola Premium', price: 14.9 },
-        { name: 'Mix Proteico', price: 19.9 },
-        { name: 'Energético Natural', price: 12.5 },
-        { name: 'Suco Detox', price: 11.5 },
-        { name: 'Snack Multigrãos', price: 8.9 }
+        { name: 'Produto Base 1', price: 19.9 },
+        { name: 'Produto Base 2', price: 24.9 },
+        { name: 'Produto Base 3', price: 29.9 },
+        { name: 'Produto Base 4', price: 34.9 }
     ];
 
     document.querySelectorAll('.snacks-carousel .snack-card').forEach((card, index) => {
@@ -327,7 +327,7 @@ function setupAuth() {
     if (!statusEl || !emailInput || !passwordInput) return;
 
     if (!supabaseClient) {
-        setAuthStatus(statusEl, 'Informe sua URL e anon key do Supabase em script.js.', true);
+        setAuthStatus(statusEl, 'Aviso: Supabase não conectado. Configure as chaves no código.', true);
         return;
     }
 
