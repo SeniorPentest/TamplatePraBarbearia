@@ -1,7 +1,6 @@
 // Supabase configuration
-// COLOQUE AS SUAS CHAVES AQUI DENTRO DAS ASPAS:
-const supabaseUrl = 'SUA_SUPABASE_URL';
-const supabaseAnonKey = 'SUA_SUPABASE_ANON_KEY';
+const supabaseUrl = 'https://kifhzxrvkfvmjlrtdeif.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpZmh6eHJ2a2Z2bWpscnRkZWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODM5MTcsImV4cCI6MjA5MTc1OTkxN30.z5oZ1KrN7cVkDWdQoL8M5yE8vLPm5h6x5pbvQOcmjaY';
 
 const hasSupabaseConfig = Boolean(
     supabaseUrl &&
@@ -126,7 +125,7 @@ function initDragCarousel(containerSelector) {
             dot.addEventListener('click', () => { currentSlide = i; updateDrag(); });
             dotsContainer.appendChild(dot);
         }
-    };
+    }
 
     const getCardWidth = () => {
         const gap = parseFloat(getComputedStyle(carousel).columnGap || getComputedStyle(carousel).gap || '16') || 16;
@@ -242,10 +241,12 @@ function setupCart() {
     };
 
     const fallbackProducts = [
-        { name: 'Produto Base 1', price: 19.9 },
-        { name: 'Produto Base 2', price: 24.9 },
-        { name: 'Produto Base 3', price: 29.9 },
-        { name: 'Produto Base 4', price: 34.9 }
+        { name: 'Barra de Frutas', price: 9.9 },
+        { name: 'Granola Premium', price: 14.9 },
+        { name: 'Mix Proteico', price: 19.9 },
+        { name: 'Energético Natural', price: 12.5 },
+        { name: 'Suco Detox', price: 11.5 },
+        { name: 'Snack Multigrãos', price: 8.9 }
     ];
 
     document.querySelectorAll('.snacks-carousel .snack-card').forEach((card, index) => {
@@ -327,7 +328,7 @@ function setupAuth() {
     if (!statusEl || !emailInput || !passwordInput) return;
 
     if (!supabaseClient) {
-        setAuthStatus(statusEl, 'Aviso: Supabase não conectado. Configure as chaves no código.', true);
+        setAuthStatus(statusEl, 'Informe sua URL e anon key do Supabase em script.js.', true);
         return;
     }
 
@@ -380,7 +381,7 @@ function setupAuth() {
             if (user) {
                 await ensureClienteRow(user, nome || email, email);
                 await loadClienteAndCard(user);
-                setAuthStatus(statusEl, 'Cadastro criado! Verifique o e-mail se necessário.');
+                setAuthStatus(statusEl, 'Cadastro criado!');
             } else {
                 setAuthStatus(statusEl, 'Cadastro iniciado! Confirme o e-mail para continuar.');
             }
