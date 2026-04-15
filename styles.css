@@ -637,36 +637,47 @@ select, input, textarea { font-family: inherit; }
 }
 
 @media (max-width: 700px) {
+    body { padding-bottom: 140px; }
     .nav-links, .nav-cta { display: none; }
     .hamburger { display: flex; }
     .nav-links.open { display: flex; flex-direction: column; position: fixed; top: 68px; left: 0; right: 0; background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 0 24px; gap: 0; z-index: 999; box-shadow: var(--shadow-md); }
     .nav-links.open > li > a { display: block; padding: 12px 24px; border-radius: 0; }
+    .hero-inner { padding: 50px 18px 72px; }
+    .hero-title { font-size: clamp(2.2rem, 8vw, 2.8rem); }
+    .hero-description { font-size: .95rem; }
+    .snacks-carousel,
+    .snacks-carousel.is-carousel {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        transform: none !important;
+    }
     .footer-top { grid-template-columns: 1fr; gap: 28px; }
     .footer-bottom { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
     .compliance-seals { grid-template-columns: 1fr 1fr; }
     .snacks-carousel-wrapper, .plans-wrapper { padding: 0; }
-    .snack-card, .plan-card { width: 100%; }
+    .snack-card, .plan-card { width: 100%; min-width: 0; }
     .snacks-carousel-wrapper .carousel-btn,
     .snacks-carousel-wrapper .carousel-dots,
     .plans-wrapper .carousel-btn,
     .plans-wrapper .carousel-dots { display: none; }
     .cart-panel {
-        left: 12px;
+        left: auto;
         right: 12px;
-        width: auto;
-        bottom: 12px;
-        max-height: 60vh;
+        width: min(320px, 88vw);
+        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+        max-height: 65vh;
         border-radius: var(--radius-md);
     }
     .whatsapp-float {
-        bottom: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
         left: 12px;
-        width: 52px;
-        height: 52px;
+        width: 50px;
+        height: 50px;
     }
 }
 
 @media (max-width: 480px) {
-    .hero-title { font-size: 2.6rem; }
+    .hero-title { font-size: 2.3rem; }
     .loyalty-card { width: 100%; }
 }
