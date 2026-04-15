@@ -3,571 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sua Marca – Plataforma universal</title>
+    <title>Barbearia Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <header id="header">
-        <nav class="navbar">
-            <div class="nav-logo">
-                <a href="#hero" aria-label="Sua Marca" style="text-decoration: none;">
-                    <h2 style="color: var(--primary-dark); margin: 0; font-family: var(--font-serif); font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px;">Sua Marca</h2>
-                </a>
-            </div>
-
-            <ul class="nav-links" id="nav-links">
-                <li><a href="#snacks">Produtos</a></li>
-                <li class="has-dropdown">
-                    <a href="#values">
-                        Valores
-                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#values">Nossa Missão</a></li>
-                        <li><a href="#values">Diferenciais</a></li>
-                        <li><a href="#compliance">Responsabilidade</a></li>
-                    </ul>
-                </li>
-                <li><a href="#loyalty">Clube</a></li>
-                <li><a href="#contact">Contato</a></li>
-            </ul>
-
-            <div class="nav-cta">
-                <a href="#contact" class="btn-nav">Pedir agora</a>
-            </div>
-
-            <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </nav>
-    </header>
-
-    <section id="hero" class="hero">
-        <div class="hero-bg-shape"></div>
-        <div class="container hero-inner">
-            <div class="hero-text">
-                <div class="hero-badge">
-                    <span class="badge-dot"></span>
-                    Template pronto para personalizar
+    <div class="split-layout">
+        <aside class="sidebar">
+            <span class="sidebar-kicker">Agenda exclusiva</span>
+            <h1 class="brand-title">Barbearia <span>Premium</span></h1>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-label">Passo 1</span>
+                    <span class="step-text">Escolha o serviço</span>
                 </div>
-                <h1 class="hero-title">
-                    Ative sua melhor
-                    <span class="hero-highlight">experiência</span>
-                </h1>
-                <p class="hero-description">
-                    Ofereça ao seu público a melhor jornada de compra com uma vitrine flexível, textos neutros e espaços preparados para receber identidade, catálogo e benefícios da sua marca.
-                </p>
-                <div class="hero-buttons">
-                    <a href="#contact" class="btn btn-primary">Começar agora ›</a>
-                    <a href="#loyalty" class="btn btn-outline-dark">Conhecer o clube</a>
+                <div class="step">
+                    <span class="step-label">Passo 2</span>
+                    <span class="step-text">Selecione o profissional</span>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <strong>+500</strong>
-                        <span>Clientes atendidos</span>
+                <div class="step">
+                    <span class="step-label">Passo 3</span>
+                    <span class="step-text">Defina dia e horário</span>
+                </div>
+                <div class="step">
+                    <span class="step-label">Passo 4</span>
+                    <span class="step-text">Pagamento</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="catalog">
+            <header class="catalog-top">
+                <span class="catalog-label">Catálogo</span>
+                <div class="catalog-meta">
+                    <span class="meta-label">Serviços disponíveis</span>
+                    <span class="meta-count">06</span>
+                </div>
+            </header>
+
+            <section class="cards-grid" aria-label="Serviços disponíveis">
+                <article class="service-card">
+                    <div class="card-top">
+                        <span class="service-title">Barba</span>
+                        <span class="service-price">R$ 55,00</span>
                     </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat">
-                        <strong>100%</strong>
-                        <span>Qualidade garantida</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat">
-                        <strong>5★</strong>
-                        <span>Avaliação dos usuários</span>
-                    </div>
-                </div>
-            </div>
+                    <p class="service-note">com toalha quente e hidratação</p>
+                    <button class="service-select" type="button">Selecionar</button>
+                </article>
 
-            <div class="hero-visual">
-                <div class="hero-emblem">
-                    <div class="image-placeholder" style="width: 280px; height: 280px; border-radius: 50%; box-shadow: var(--shadow-lg);"></div>
-                </div>
-            </div>
+                <article class="service-card">
+                    <div class="card-top">
+                        <span class="service-title">Barba + Cabelo</span>
+                        <span class="service-price">R$ 90,00</span>
+                    </div>
+                    <p class="service-note">finalização clássica com pomada de acabamento</p>
+                    <button class="service-select" type="button">Selecionar</button>
+                </article>
+
+                <article class="service-card">
+                    <div class="card-top">
+                        <span class="service-title">Barba e cavanhaque</span>
+                        <span class="service-price">R$ 65,00</span>
+                    </div>
+                    <p class="service-note">alinhamento completo para barba e cavanhaque</p>
+                    <button class="service-select" type="button">Selecionar</button>
+                </article>
+
+                <article class="service-card">
+                    <div class="card-top">
+                        <span class="service-title">Cabelo</span>
+                        <span class="service-price">R$ 60,00</span>
+                    </div>
+                    <p class="service-note">tesoura ou máquina com finalização detalhada</p>
+                    <button class="service-select" type="button">Selecionar</button>
+                </article>
+
+                <article class="service-card">
+                    <div class="card-top">
+                        <span class="service-title">Barba com toalha</span>
+                        <span class="service-price">R$ 50,00</span>
+                    </div>
+                    <p class="service-note">relaxamento facial e acabamento definido</p>
+                    <button class="service-select" type="button">Selecionar</button>
+                </article>
+
+                <article class="service-card">
+                    <div class="card-top">
+                        <span class="service-title">Barba, cabelo e tosa</span>
+                        <span class="service-price">R$ 110,00</span>
+                    </div>
+                    <p class="service-note">combinação completa com alinhamento geral</p>
+                    <button class="service-select" type="button">Selecionar</button>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <div class="summary-bar" role="status">
+        <div class="summary-info">
+            <span class="summary-title">Resumo do Agendamento</span>
+            <span class="summary-text">Selecione um serviço para seguir aos próximos passos.</span>
         </div>
-
-        <div class="hero-scroll-hint">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-            Role para baixo
+        <div class="summary-actions">
+            <div class="payment-status">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span class="status-text">Pagamento Pendente</span>
+            </div>
+            <button class="confirm-btn" type="button">Confirmar</button>
         </div>
-    </section>
-
-    <section id="snacks" class="snacks">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Produtos</span>
-                <h2>Produtos prontos para <span class="text-accent">entrar no seu catálogo</span></h2>
-                <p class="section-desc">Substitua estes exemplos pelos itens que sua operação oferece e apresente benefícios em poucas linhas.</p>
-            </div>
-            <div class="snacks-carousel-wrapper carousel-wrapper">
-                <button class="carousel-btn carousel-btn-prev" aria-label="Anterior">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <div class="snacks-carousel carousel-track">
-                    <div class="snack-card">
-                        <div class="snack-card-img"><div class="image-placeholder"></div></div>
-                        <h3>Nome do Produto</h3>
-                        <p>Descreva rapidamente o que o item entrega e como ele melhora a experiência de quem compra.</p>
-                        <div class="snack-price">
-                            <span class="price-from">a partir de</span>
-                            <span class="price-value">R$ 00,00</span>
-                        </div>
-                    </div>
-                    <div class="snack-card">
-                        <div class="snack-card-img"><div class="image-placeholder"></div></div>
-                        <h3>Nome do Produto</h3>
-                        <p>Inclua um texto neutro que sirva de guia para destacar diferenciais e resultados percebidos.</p>
-                        <div class="snack-price">
-                            <span class="price-from">a partir de</span>
-                            <span class="price-value">R$ 00,00</span>
-                        </div>
-                    </div>
-                    <div class="snack-card">
-                        <div class="snack-card-img"><div class="image-placeholder"></div></div>
-                        <h3>Nome do Produto</h3>
-                        <p>Use este espaço para apresentar benefícios principais e reforçar que tudo pode ser customizado.</p>
-                        <div class="snack-price">
-                            <span class="price-from">a partir de</span>
-                            <span class="price-value">R$ 00,00</span>
-                        </div>
-                    </div>
-                    <div class="snack-card">
-                        <div class="snack-card-img"><div class="image-placeholder"></div></div>
-                        <h3>Nome do Produto</h3>
-                        <p>Mencione características que resumam qualidade, conveniência e adaptação às necessidades do cliente.</p>
-                        <div class="snack-price">
-                            <span class="price-from">a partir de</span>
-                            <span class="price-value">R$ 00,00</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-btn carousel-btn-next" aria-label="Próximo">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-                <div class="carousel-dots"></div>
-            </div>
-            
-            <div class="cart-panel" id="cart-panel">
-                <div class="cart-header">
-                    <div>
-                        <p class="section-tag">Carrinho</p>
-                        <h3>Itens selecionados</h3>
-                    </div>
-                    <div class="cart-total" id="cart-total">R$ 0,00</div>
-                </div>
-                <div class="form-group cart-schedule">
-                    <label for="appointment-datetime">Data e horário do agendamento</label>
-                    <input type="datetime-local" id="appointment-datetime" name="appointment-datetime" required>
-                </div>
-                <ul class="cart-items" id="cart-items"></ul>
-                <p class="cart-empty" id="cart-empty">Nenhum item no carrinho ainda.</p>
-            </div>
-            <div class="section-cta">
-                <a href="#contact" class="btn btn-primary">Ver todos os produtos</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="values" class="values" style="background: var(--dark);">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag" style="background: rgba(255,255,255,0.1); color: #fff;">Nossos Pilares</span>
-                <h2 style="color:#fff;">O que <span style="color:var(--light-bg);">sustenta a experiência</span></h2>
-                <p class="section-desc" style="color:#e0e0e0;">Princípios neutros e sólidos para qualquer operação que queira oferecer a melhor jornada.</p>
-            </div>
-            <div class="values-wrapper carousel-wrapper">
-                <button class="carousel-btn carousel-btn-prev" aria-label="Anterior">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <div class="values-grid values-carousel carousel-track">
-                    <div class="value-card" style="background: var(--light-bg);">
-                        <div class="value-icon" aria-hidden="true"></div>
-                        <h3>Comprometimento</h3>
-                        <p>Entrega consistente e responsabilidade total com resultados, em qualquer setor.</p>
-                    </div>
-                    <div class="value-card" style="background: var(--light-bg);">
-                        <div class="value-icon" aria-hidden="true"></div>
-                        <h3>Serviço Personalizado</h3>
-                        <p>Atendimento flexível que se adapta ao contexto e às metas de cada cliente.</p>
-                    </div>
-                    <div class="value-card" style="background: var(--light-bg);">
-                        <div class="value-icon" aria-hidden="true"></div>
-                        <h3>Qualidade Premium</h3>
-                        <p>Processos, produtos e serviços com padrão elevado para garantir confiança e longevidade.</p>
-                    </div>
-                </div>
-                <button class="carousel-btn carousel-btn-next" aria-label="Próximo">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-                <div class="carousel-dots"></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="loyalty" class="loyalty">
-        <div class="container">
-            <div class="loyalty-inner">
-                <div class="loyalty-text">
-                    <span class="section-tag">Programa de fidelidade</span>
-                    <div class="loyalty-seal">[Módulo Opcional de Pontos]</div>
-                    <h2>Ganhe pontos e <span class="text-accent">recompensas</span></h2>
-                    <p>Ative um clube de pontos quando fizer sentido para o seu negócio e ofereça benefícios que aumentam retenção e recorrência.</p>
-                    <div class="loyalty-benefits">
-                        <div class="loyalty-benefit">
-                            <span class="benefit-num">1</span>
-                            <div>
-                                <strong>Acumule pontos</strong>
-                                <span>Clientes ganham pontos a cada compra ou ação que você definir.</span>
-                            </div>
-                        </div>
-                        <div class="loyalty-benefit">
-                            <span class="benefit-num">2</span>
-                            <div>
-                                <strong>Suba de nível</strong>
-                                <span>Defina tiers e desbloqueie vantagens progressivas.</span>
-                            </div>
-                        </div>
-                        <div class="loyalty-benefit">
-                            <span class="benefit-num">3</span>
-                            <div>
-                                <strong>Resgate recompensas</strong>
-                                <span>Troque pontos por benefícios, brindes, upgrades ou serviços premium.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#contact" class="btn btn-primary">Participar do clube</a>
-                </div>
-
-                <div class="loyalty-visual">
-                    <div class="loyalty-card">
-                        <div class="lcard-header">
-                            <div class="lcard-logo">Sua Marca</div>
-                            <div class="lcard-tier">GOLD</div>
-                        </div>
-                        <div class="lcard-points">
-                            <span class="lcard-pts-num" id="loyalty-points">0</span>
-                            <span class="lcard-pts-label">pontos acumulados</span>
-                        </div>
-                        <div class="lcard-footer">
-                            <span class="lcard-name" id="loyalty-name">Visitante</span>
-                            <span class="lcard-stars">★★★★☆</span>
-                        </div>
-                    </div>
-                    <div class="loyalty-badges">
-                        <span class="lbadge">Prata</span>
-                        <span class="lbadge lbadge-active">Ouro ✓</span>
-                        <span class="lbadge">Diamante</span>
-                    </div>
-                    <div class="auth-card" id="auth-card">
-                        <h3>Login / Cadastro</h3>
-                        <div class="form-group">
-                            <label for="auth-name">Nome</label>
-                            <input type="text" id="auth-name" placeholder="Seu nome completo">
-                        </div>
-                        <div class="form-group">
-                            <label for="auth-email">E-mail</label>
-                            <input type="email" id="auth-email" placeholder="voce@email.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="auth-password">Senha</label>
-                            <input type="password" id="auth-password" placeholder="Mínimo 6 caracteres">
-                        </div>
-                        <div class="auth-actions">
-                            <button type="button" class="btn btn-outline-dark" id="login-button">Entrar</button>
-                            <button type="button" class="btn btn-primary" id="signup-button">Criar conta</button>
-                        </div>
-                        <div class="form-status" id="auth-status"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="club-tiers" class="club-tiers">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Nosso Clube</span>
-                <h2>Escolha seu <span class="text-accent">plano</span></h2>
-                <p class="section-desc">Três níveis de benefícios para você aproveitar ao máximo a experiência da sua marca.</p>
-            </div>
-            <div class="plans-wrapper carousel-wrapper">
-                <button class="carousel-btn carousel-btn-prev" aria-label="Anterior">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <div class="plans-grid plans-carousel carousel-track">
-                    <div class="plan-card">
-                        <p class="plan-name">ESSENCIAL</p>
-                        <div class="plan-price">
-                            <span class="plan-currency">R$</span>
-                            <span class="plan-amount">X,XX</span>
-                            <span class="plan-period">/mês</span>
-                        </div>
-                        <ul class="plan-features">
-                            <li>Benefício básico 1</li>
-                            <li>Frete Grátis</li>
-                            <li>Desconto em itens selecionados</li>
-                            <li>Newsletter mensal</li>
-                        </ul>
-                        <a href="#contact" class="btn btn-outline-dark">Assinar</a>
-                    </div>
-                    <div class="plan-card plan-card-featured">
-                        <span class="plan-badge">Mais popular</span>
-                        <p class="plan-name">ESTRATÉGICO</p>
-                        <div class="plan-price">
-                            <span class="plan-currency">R$</span>
-                            <span class="plan-amount">X,XX</span>
-                            <span class="plan-period">/mês</span>
-                        </div>
-                        <ul class="plan-features">
-                            <li>Benefício intermediário 1</li>
-                            <li>Benefício intermediário 2</li>
-                            <li>Frete Grátis</li>
-                            <li>Desconto maior em toda loja</li>
-                            <li>Newsletter semanal</li>
-                        </ul>
-                        <a href="#contact" class="btn btn-outline-dark" style="background:#fff;color:var(--primary-blue);">Assinar</a>
-                    </div>
-                    <div class="plan-card">
-                        <p class="plan-name">PREMIUM</p>
-                        <div class="plan-price">
-                            <span class="plan-currency">R$</span>
-                            <span class="plan-amount">X,XX</span>
-                            <span class="plan-period">/mês</span>
-                        </div>
-                        <ul class="plan-features">
-                            <li>Benefícios completos</li>
-                            <li>Acesso Privilegiado aos lançamentos</li>
-                            <li>Frete Grátis</li>
-                            <li>Desconto máximo aplicável</li>
-                            <li>Atendimento prioritário</li>
-                            <li>Acesso Exclusivo a ofertas secretas</li>
-                        </ul>
-                        <a href="#contact" class="btn btn-primary">Assinar</a>
-                    </div>
-                </div>
-                <button class="carousel-btn carousel-btn-next" aria-label="Próximo">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-                <div class="carousel-dots"></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="compliance" class="compliance">
-        <div class="container">
-            <div class="compliance-inner">
-                <div class="compliance-text">
-                    <span class="section-tag">Qualidade &amp; Responsabilidade</span>
-                    <h2>Nossos <span class="text-accent">diferenciais</span></h2>
-                    <p>Operamos com os mais altos padrões do mercado, garantindo ética e transparência em todas as nossas operações e processos.</p>
-                    <div class="compliance-items">
-                        <div class="compliance-item">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            Entrega rápida e segura
-                        </div>
-                        <div class="compliance-item">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            Garantia de satisfação em cada pedido
-                        </div>
-                        <div class="compliance-item">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            Suporte dedicado para resolver qualquer dúvida
-                        </div>
-                        <div class="compliance-item">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            Pagamento criptografado e 100% seguro
-                        </div>
-                    </div>
-                    <a href="#contact" class="btn btn-compliance">Saiba mais sobre nós →</a>
-                </div>
-
-                <div class="compliance-seals">
-                    <div class="seal-card">
-                        <div class="seal-icon">🚀</div>
-                        <strong>Agilidade</strong>
-                        <span>Entregas expressas</span>
-                    </div>
-                    <div class="seal-card">
-                        <div class="seal-icon">🤝</div>
-                        <strong>Confiança</strong>
-                        <span>Garantia total</span>
-                    </div>
-                    <div class="seal-card">
-                        <div class="seal-icon">💬</div>
-                        <strong>Suporte</strong>
-                        <span>Atendimento real</span>
-                    </div>
-                    <div class="seal-card">
-                        <div class="seal-icon">🔒</div>
-                        <strong>Segurança</strong>
-                        <span>Dados protegidos</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <div class="section-header" style="text-align:left; margin-bottom:32px;">
-                        <span class="section-tag">Contato</span>
-                        <h2>Fale com a <span class="text-accent">gente</span></h2>
-                        <p class="section-desc" style="margin:0; text-align:left;">Nossa equipe está pronta para ajudar você com qualquer dúvida ou solicitação.</p>
-                    </div>
-                    <ul class="contact-list">
-                        <li>
-                            <div class="contact-icon-wrap">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            </div>
-                            <div>
-                                <span class="contact-label">E-mail</span>
-                                <a href="mailto:contato@suamarca.com">contato@suamarca.com</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-icon-wrap">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                            </div>
-                            <div>
-                                <span class="contact-label">Telefone</span>
-                                <a href="tel:+550000000000">(+00) 00000-0000</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-icon-wrap">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            </div>
-                            <div>
-                                <span class="contact-label">Endereço</span>
-                                <span>Endereço da sua empresa ou ponto de atendimento</span>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Instagram">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                        </a>
-                        <a href="#" class="social-link" aria-label="YouTube">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Twitter / X">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0012 8v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
-                        </a>
-                    </div>
-                </div>
-
-                <form class="contact-form" id="contact-form" novalidate>
-                    <div class="form-group">
-                        <label for="contact-name">Nome completo *</label>
-                        <input type="text" id="contact-name" name="name" placeholder="Seu nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact-email">E-mail *</label>
-                        <input type="email" id="contact-email" name="email" placeholder="seu@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact-subject">Assunto</label>
-                        <select id="contact-subject" name="subject">
-                            <option value="">Selecione um assunto</option>
-                            <option value="subscriptions">Planos e assinaturas</option>
-                            <option value="support">Suporte técnico</option>
-                            <option value="billing">Faturamento</option>
-                            <option value="other">Outro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact-message">Mensagem *</label>
-                        <textarea id="contact-message" name="message" placeholder="Como podemos ajudar?" required></textarea>
-                    </div>
-                    <div class="form-status" id="form-status"></div>
-                    <button type="submit" class="btn btn-primary btn-full">
-                        <span>Enviar Mensagem</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-top">
-                <div>
-                    <h2 style="font-family: var(--font-serif); margin: 0 0 14px 0; color: #fff;">Sua Marca</h2>
-                    <p class="footer-tagline">Template universal para apresentar produtos, serviços e benefícios com a identidade da sua marca.</p>
-                    <div class="footer-social">
-                        <a href="#" aria-label="Instagram">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                        </a>
-                        <a href="#" aria-label="YouTube">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
-                        </a>
-                        <a href="#" aria-label="Twitter">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0012 8v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
-                        </a>
-                    </div>
-                </div>
-                <div class="footer-links-group">
-                        <h4>Conteúdo</h4>
-                        <ul>
-                        <li><a href="#snacks">Produtos</a></li>
-                        <li><a href="#loyalty">Clube</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-group">
-                    <h4>Empresa</h4>
-                    <ul>
-                        <li><a href="#values">Valores</a></li>
-                        <li><a href="#loyalty">Fidelidade</a></li>
-                        <li><a href="#compliance">Compliance</a></li>
-                        <li><a href="#contact">Contato</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-group">
-                    <h4>Suporte</h4>
-                    <ul>
-                        <li><a href="#contact">Central de ajuda</a></li>
-                        <li><a href="#contact">Fale conosco</a></li>
-                        <li><a href="#compliance">Privacidade</a></li>
-                        <li><a href="#compliance">Termos de uso</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Sua Marca. Todos os direitos reservados.</p>
-                <div class="footer-bottom-links">
-                    <a href="#compliance">Política de Privacidade</a>
-                    <a href="#compliance">Termos de Uso</a>
-                    <a href="#compliance">Cookies</a>
-                </div>
-                <div class="footer-location">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Localização da sua operação
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <a href="https://wa.me/5500000000000" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
-        <svg aria-hidden="true" viewBox="0 0 32 32" fill="none">
-            <path d="M16 2.667C8.636 2.667 2.667 8.636 2.667 16c0 2.28.61 4.42 1.673 6.272L2.667 29.333l7.2-1.894A13.28 13.28 0 0016 29.333c7.364 0 13.333-5.969 13.333-13.333 0-7.364-5.969-13.333-13.333-13.333Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M21.333 18.667c-.333.942-1.787 1.79-2.52 1.92-.743.137-1.7.19-2.937-.293-3.29-1.308-5.316-4.589-5.487-4.82-.17-.232-1.31-1.74-1.31-3.33 0-1.59.83-2.361 1.12-2.69.282-.328.624-.36.832-.36.21 0 .415.002.594.01.187.01.439-.07.686.514.28.67.89 2.18.97 2.336.08.154.13.34.025.54-.105.2-.157.33-.312.52-.157.19-.334.425-.474.58-.157.17-.325.36-.137.69.187.32.836 1.34 1.79 2.21 1.23 1.15 2.268 1.51 2.58 1.68.312.17.492.145.675-.08.185-.23.78-.9.988-1.215.21-.314.42-.26.705-.15.282.106 1.786.84 2.09.99.307.152.507.23.58.36.07.13.07.75-.263 1.69Z" fill="currentColor"/>
-        </svg>
-    </a>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.48.0/dist/umd/supabase.js"></script>
-    <script src="script.js"></script>
+    </div>
 </body>
 </html>
