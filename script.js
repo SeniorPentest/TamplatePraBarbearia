@@ -190,5 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('copy-pix')?.addEventListener('click', copyPixKey);
 
+    selectPayment('pix');
     updateSummary();
 });
