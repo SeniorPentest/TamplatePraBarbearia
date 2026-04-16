@@ -182,11 +182,61 @@ function attachConfirmHandlers() {
     els.floatingConfirm?.addEventListener('click', confirm);
 }
 
+function setupHeroCarousel() {
+    const viewport = document.querySelector('.carousel-viewport');
+    const slides = Array.from(document.querySelectorAll('.hero-slide'));
+    const arrows = document.querySelectorAll('.carousel-arrow');
+    if (!viewport || !slides.length) return;
+
+    let currentIndex = 0;
+
+    const setActive = (index) => {
+        slides.forEach((slide, idx) => slide.classList.toggle('is-active', idx === index));
+    };
+
+    const goTo = (index) => {
+        currentIndex = (index + slides.length) % slides.length;
+        const target = slides[currentIndex];
+        if (target) {
+            viewport.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+        }
+        setActive(currentIndex);
+    };
+
+    arrows.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const dir = btn.dataset.direction === 'prev' ? -1 : 1;
+            goTo(currentIndex + dir);
+        });
+    });
+
+    let debounce;
+    viewport.addEventListener('scroll', () => {
+        if (debounce) clearTimeout(debounce);
+        debounce = setTimeout(() => {
+            const { scrollLeft } = viewport;
+            let nearest = currentIndex;
+            slides.forEach((slide, idx) => {
+                const distance = Math.abs(slide.offsetLeft - scrollLeft);
+                const best = Math.abs(slides[nearest].offsetLeft - scrollLeft);
+                if (distance < best - 1) nearest = idx;
+            });
+            if (nearest !== currentIndex) {
+                currentIndex = nearest;
+                setActive(currentIndex);
+            }
+        }, 80);
+    });
+
+    goTo(0);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     attachServiceHandlers();
     attachPaymentHandlers();
     attachFormHandlers();
     attachConfirmHandlers();
+    setupHeroCarousel();
 
     document.getElementById('copy-pix')?.addEventListener('click', copyPixKey);
 

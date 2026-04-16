@@ -213,6 +213,36 @@ button, input, select, textarea { font: inherit; }
     justify-content: flex-end;
 }
 
+.hero-carousel {
+    width: 100%;
+    max-width: 420px;
+}
+
+.carousel-viewport {
+    overflow-x: hidden;
+}
+
+.carousel-viewport::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-viewport {
+    scrollbar-width: none;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 14px;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+}
+
+.hero-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
 .hero-card {
     background: linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
     border: 1px solid var(--color-border);
@@ -220,6 +250,41 @@ button, input, select, textarea { font: inherit; }
     padding: 24px;
     box-shadow: var(--shadow-soft);
     max-width: 420px;
+}
+
+.hero-slide.is-active {
+    border-color: rgba(198, 161, 91, 0.45);
+    box-shadow: 0 16px 42px rgba(198, 161, 91, 0.2);
+}
+
+.carousel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.carousel-controls {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.carousel-arrow {
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--color-muted);
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.carousel-arrow:hover {
+    border-color: rgba(198, 161, 91, 0.6);
+    background: rgba(198, 161, 91, 0.08);
+    color: var(--accent);
 }
 
 .badge {
