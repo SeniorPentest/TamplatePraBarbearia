@@ -19,13 +19,11 @@
                     <span class="brand-name">Barbearia Premium</span>
                 </div>
             </div>
-
-            <nav class="nav-links" id="nav-links" aria-label="Navegação principal">
+            <nav class="nav-links">
                 <a href="#services">Serviços</a>
                 <a href="#booking">Agendar</a>
                 <a href="#contato">Contato</a>
             </nav>
-
             <div class="header-actions">
                 <span class="header-phone">11 99999-9999</span>
                 <a class="btn btn-primary" href="#booking">Agendar agora</a>
@@ -34,293 +32,62 @@
     </header>
 
     <main>
-        <section class="hero" id="topo">
-            <div class="container hero-grid">
-                <div class="hero-copy">
-                    <p class="eyebrow">Atendimento premium em Alphaville</p>
-                    <h1>Visual de respeito com ritual de barbearia boutique.</h1>
-                    <p class="lede">Clássico, moderno ou autoral: serviço completo com toalha quente, navalha afiada e produtos selecionados. Agende online e chegue com o horário reservado.</p>
-                    <div class="hero-actions">
-                        <a class="btn btn-primary" href="#booking">Escolher horário</a>
-                        <a class="btn btn-ghost" href="#services">Ver serviços</a>
-                    </div>
-                    <div class="hero-stats">
-                        <div class="stat">
-                            <strong>4,9★</strong>
-                            <span>Mais de 1.200 atendimentos</span>
-                        </div>
-                        <div class="stat">
-                            <strong>12+ anos</strong>
-                            <span>Tradição e técnicas clássicas</span>
-                        </div>
-                        <div class="stat">
-                            <strong>Pagamento seguro</strong>
-                            <span>Pix, cartão ou dinheiro</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hero-pane">
-                    <div class="hero-card">
-                        <span class="badge">Hoje</span>
-                        <h3>Horários abertos com atendimento agendado</h3>
-                        <p>Reserve sem fila, com bebida cortesia e higienização completa a cada cliente.</p>
-                        <ul class="list">
-                            <li>Toalha quente e finalização profissional</li>
-                            <li>Barbeiros especialistas em cortes clássicos e fades</li>
-                            <li>Ambiente climatizado e playlist selecionada</li>
-                        </ul>
-                        <div class="hero-card-footer">
-                            <div class="hero-contact">
-                                <span>Whatsapp</span>
-                                <strong>11 99999-9999</strong>
-                                <small>Retorno imediato</small>
-                            </div>
-                            <div class="hero-payments">
-                                <span>Pagamentos</span>
-                                <div class="pill-row">
-                                    <span class="pill">Pix</span>
-                                    <span class="pill">Cartão</span>
-                                    <span class="pill">Dinheiro</span>
-                                </div>
-                                <small>Escolha na hora do agendamento</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section class="section services" id="services">
             <div class="container">
                 <div class="section-head">
-                    <div>
-                        <p class="eyebrow">Menu exclusivo</p>
-                        <h2>Escolha seu serviço</h2>
-                        <p>Rituais completos com produtos de barbearia premium e esterilização entre cada atendimento.</p>
-                    </div>
-                    <div class="section-callout">
-                        <span class="pill pill-outline">Higienização de ferramentas a cada cliente</span>
-                        <span class="pill pill-outline">Bebida cortesia</span>
-                    </div>
+                    <h2>Escolha seu serviço</h2>
                 </div>
-
-                <div class="service-grid" aria-label="Serviços disponíveis">
+                <div class="service-grid">
                     <article class="service-card" data-service="Barba" data-price="55">
                         <div class="card-head">
-                            <div>
-                                <h3>Barba</h3>
-                                <p class="card-note">Navalha, toalha quente e hidratação profunda.</p>
-                            </div>
+                            <h3>Barba</h3>
                             <div class="price-tag">R$ 55,00</div>
                         </div>
-                        <div class="meta-row">
-                            <span class="pill">25 min</span>
-                            <span class="pill pill-muted">Clássico</span>
-                        </div>
                         <button class="service-select" type="button">Selecionar</button>
                     </article>
-
-                    <article class="service-card" data-service="Barba + Cabelo" data-price="90">
+                    <article class="service-card" data-service="Corte + Barba" data-price="90">
                         <div class="card-head">
-                            <div>
-                                <h3>Barba + Cabelo</h3>
-                                <p class="card-note">Corte completo, alinhamento e finalização com pomada de acabamento.</p>
-                            </div>
+                            <h3>Corte + Barba</h3>
                             <div class="price-tag">R$ 90,00</div>
                         </div>
-                        <div class="meta-row">
-                            <span class="pill">50 min</span>
-                            <span class="pill pill-muted">Mais pedido</span>
-                        </div>
                         <button class="service-select" type="button">Selecionar</button>
                     </article>
-
-                    <article class="service-card" data-service="Barba e Cavanhaque" data-price="65">
-                        <div class="card-head">
-                            <div>
-                                <h3>Barba e Cavanhaque</h3>
-                                <p class="card-note">Alinhamento completo, definição e hidratação da pele.</p>
-                            </div>
-                            <div class="price-tag">R$ 65,00</div>
-                        </div>
-                        <div class="meta-row">
-                            <span class="pill">30 min</span>
-                            <span class="pill pill-muted">Preciso</span>
-                        </div>
-                        <button class="service-select" type="button">Selecionar</button>
-                    </article>
-
-                    <article class="service-card" data-service="Cabelo" data-price="60">
-                        <div class="card-head">
-                            <div>
-                                <h3>Cabelo</h3>
-                                <p class="card-note">Tesoura ou máquina com acabamento detalhado e styling.</p>
-                            </div>
-                            <div class="price-tag">R$ 60,00</div>
-                        </div>
-                        <div class="meta-row">
-                            <span class="pill">35 min</span>
-                            <span class="pill pill-muted">Clássico</span>
-                        </div>
-                        <button class="service-select" type="button">Selecionar</button>
-                    </article>
-
-                    <article class="service-card" data-service="Barba com toalha" data-price="50">
-                        <div class="card-head">
-                            <div>
-                                <h3>Barba com toalha</h3>
-                                <p class="card-note">Relaxamento facial e acabamento definido para barba.</p>
-                            </div>
-                            <div class="price-tag">R$ 50,00</div>
-                        </div>
-                        <div class="meta-row">
-                            <span class="pill">25 min</span>
-                            <span class="pill pill-muted">Relax</span>
-                        </div>
-                        <button class="service-select" type="button">Selecionar</button>
-                    </article>
-
-                    <article class="service-card" data-service="Barba, cabelo e tosa" data-price="110">
-                        <div class="card-head">
-                            <div>
-                                <h3>Barba, cabelo e tosa</h3>
-                                <p class="card-note">Combo completo com alinhamento geral e cuidado máximo.</p>
-                            </div>
-                            <div class="price-tag">R$ 110,00</div>
-                        </div>
-                        <div class="meta-row">
-                            <span class="pill">60 min</span>
-                            <span class="pill pill-muted">VIP</span>
-                        </div>
-                        <button class="service-select" type="button">Selecionar</button>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section highlights">
-            <div class="container highlights-grid">
-                <div class="highlight-card">
-                    <h3>Ambiente e ritual</h3>
-                    <p>Bebida cortesia, toalha quente, aromaterapia leve e higienização de ferramentas a cada atendimento.</p>
-                </div>
-                <div class="highlight-card">
-                    <h3>Equipe especialista</h3>
-                    <p>Barbeiros focados em fades, cortes clássicos, tesoura e design de barba com lâmina.</p>
-                </div>
-                <div class="highlight-card">
-                    <h3>Pagamento fácil</h3>
-                    <p>Pix, cartão ou dinheiro. Gere o pagamento online e chegue apenas para curtir o atendimento.</p>
                 </div>
             </div>
         </section>
 
         <section class="section booking" id="booking">
             <div class="container">
-                <div class="section-head">
-                    <div>
-                        <p class="eyebrow">Agende online</p>
-                        <h2>Garanta seu horário e forma de pagamento</h2>
-                        <p>Selecione serviço, profissional e pagamento em poucos passos. Receba a confirmação na hora.</p>
-                    </div>
-                    <div class="section-callout">
-                        <span class="pill">Sem fila</span>
-                        <span class="pill">Horário reservado</span>
-                        <span class="pill">Confirmação imediata</span>
-                    </div>
-                </div>
-
                 <div class="booking-grid">
                     <div class="panel panel-form">
-                        <h3>Escolha horário e profissional</h3>
+                        <h3>Dados do Agendamento</h3>
                         <div class="field">
-                            <label for="client-name">Seu nome</label>
-                            <input id="client-name" type="text" placeholder="Como devemos chamar você?">
+                            <label>Seu nome</label>
+                            <input id="client-name" type="text" placeholder="Como deseja ser chamado?">
                         </div>
                         <div class="field">
-                            <label for="client-phone">Telefone ou WhatsApp</label>
-                            <input id="client-phone" type="tel" placeholder="(11) 99999-9999">
-                        </div>
-                        <div class="field">
-                            <label for="appointment">Data e horário</label>
+                            <label>Data e horário</label>
                             <input id="appointment" type="datetime-local">
-                        </div>
-                        <div class="field">
-                            <label for="professional">Profissional</label>
-                            <select id="professional">
-                                <option value="">Primeiro disponível</option>
-                                <option value="Rafael">Rafael - especialista em fades</option>
-                                <option value="Bruno">Bruno - barba clássica</option>
-                                <option value="Henrique">Henrique - cortes tradicionais</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="notes">Observações</label>
-                            <textarea id="notes" rows="3" placeholder="Preferência de estilo, máquina ou tesoura, sensibilidade de pele..."></textarea>
                         </div>
                     </div>
 
                     <div class="panel panel-payment">
-                        <div class="summary-line">
-                            <span>Serviço</span>
-                            <strong id="summary-service">Nenhum selecionado</strong>
-                        </div>
-                        <div class="summary-line">
-                            <span>Horário</span>
-                            <strong id="summary-schedule">Escolha data e hora</strong>
-                        </div>
-                        <div class="summary-line">
-                            <span>Profissional</span>
-                            <strong id="summary-professional">Primeiro disponível</strong>
-                        </div>
-
-                        <div class="payment-methods" aria-label="Formas de pagamento">
-                            <button class="payment-button" data-method="pix" type="button">Pix instantâneo</button>
-                            <button class="payment-button" data-method="card" type="button">Cartão de crédito/débito</button>
-                            <button class="payment-button" data-method="cash" type="button">Dinheiro na barbearia</button>
+                        <h3>Pagamento Seguro</h3>
+                        <div class="payment-methods">
+                            <button class="payment-button" data-method="pix" type="button">Pix Instantâneo</button>
+                            <button class="payment-button" data-method="card" type="button">Cartão de Crédito</button>
+                            <button class="payment-button" data-method="cash" type="button">Pagar na Local</button>
                         </div>
 
                         <div class="payment-forms">
                             <div class="payment-form" data-method="pix">
-                                <p>Use a chave Pix abaixo para pagar agora e agilizar sua chegada.</p>
-                                <div class="pix-key">
-                                    <code id="pix-key">barbearia@premium.com</code>
-                                    <button id="copy-pix" type="button">Copiar chave</button>
-                                </div>
-                                <small>Ao confirmar, reservamos o horário e aguardamos o comprovante.</small>
+                                <p>O QR Code será gerado no Mercado Pago.</p>
                             </div>
-
                             <div class="payment-form" data-method="card">
-                                <p>Dados necessários para garantir o agendamento.</p>
-                                <div class="field">
-                                    <label for="card-name">Nome impresso</label>
-                                    <input id="card-name" type="text" placeholder="Nome completo">
-                                </div>
-                                <div class="field">
-                                    <label for="card-number">Número do cartão</label>
-                                    <input id="card-number" inputmode="numeric" pattern="[0-9 ]*" maxlength="19" placeholder="0000 0000 0000 0000">
-                                </div>
-                                <div class="field grid-2">
-                                    <div>
-                                        <label for="card-expiry">Validade</label>
-                                        <input id="card-expiry" type="text" inputmode="numeric" placeholder="MM/AA" maxlength="5">
-                                    </div>
-                                    <div>
-                                        <label for="card-cvv">CVV</label>
-                                        <input id="card-cvv" type="text" inputmode="numeric" maxlength="4" placeholder="123">
-                                    </div>
-                                </div>
-                                <small>Não cobramos agora: validação apenas para reservar o horário.</small>
+                                <p>Pague com segurança via Checkout Pro.</p>
                             </div>
-
                             <div class="payment-form" data-method="cash">
-                                <p>Pagamento presencial na barbearia.</p>
-                                <ul class="list">
-                                    <li>Reserve online e pague na chegada.</li>
-                                    <li>Mantenha-se no horário: tolerância de 10 minutos.</li>
-                                    <li>Podemos confirmar por WhatsApp.</li>
-                                </ul>
+                                <p>Agende e pague direto na barbearia.</p>
                             </div>
                         </div>
 
@@ -330,47 +97,11 @@
                         </div>
 
                         <button class="confirm-btn" id="confirm-btn" type="button" disabled>Confirmar agendamento</button>
-                        <p class="feedback" id="booking-feedback" role="status"></p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section contact" id="contato">
-            <div class="container contact-card">
-                <div>
-                    <p class="eyebrow">Visite</p>
-                    <h3>Alameda Rio Negro, 999 - Alphaville</h3>
-                    <p>Estacionamento próprio | Ambiente climatizado | Wi-Fi e bebidas.</p>
-                </div>
-                <div class="contact-meta">
-                    <div>
-                        <span class="meta-label">Horários</span>
-                        <strong>Seg a Sáb - 9h às 20h</strong>
-                    </div>
-                    <div>
-                        <span class="meta-label">Contato</span>
-                        <strong>11 99999-9999</strong>
-                    </div>
-                    <a class="btn btn-ghost" href="https://wa.me/5511999999999" target="_blank" rel="noopener">Abrir WhatsApp</a>
                 </div>
             </div>
         </section>
     </main>
-
-    <div class="summary-bar" role="status">
-        <div class="summary-info">
-            <span class="summary-title">Resumo do Agendamento</span>
-            <span class="summary-text" id="summary-text">Selecione um serviço para seguir aos próximos passos.</span>
-        </div>
-        <div class="summary-actions">
-            <div class="payment-status">
-                <span class="status-dot" id="status-dot" aria-hidden="true"></span>
-                <span class="status-text" id="status-text">Pagamento pendente</span>
-            </div>
-            <button class="confirm-btn" id="floating-confirm" type="button" disabled>Finalizar</button>
-        </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.48.0/dist/umd/supabase.js"></script>
     <script src="script.js"></script>
