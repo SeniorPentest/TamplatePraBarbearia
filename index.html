@@ -109,7 +109,7 @@
                     <div class="panel payment-panel">
                         <h3>Pagamento Seguro</h3>
                         <div class="payment-methods">
-                            <button class="payment-button active" data-method="pix">Pix (Direto)</button>
+                            <button class="payment-button active" data-method="pix">Pix (QRCode)</button>
                             <button class="payment-button" data-method="card">Cartão de Crédito</button>
                         </div>
 
@@ -128,13 +128,13 @@
     <div id="pix-modal" class="modal-overlay" style="display:none;">
         <div class="modal-content">
             <h3>Pagamento via Pix</h3>
-            <p>Efetua o pagamento e envia o comprovativo no passo seguinte.</p>
+            <p>Efetua o pagamento e envia o comprovante no passo seguinte.</p>
             <img id="qr-code-img" src="" alt="QR Code Pix">
             <div class="pix-copy-box">
                 <input id="pix-copy-paste" readonly>
                 <button onclick="copyPixCode()">Copiar Código</button>
             </div>
-            <button id="btn-check-payment" class="btn-success">Já paguei! Enviar Comprovativo</button>
+            <button id="btn-check-payment" class="btn-success">Já paguei! Enviar Comprovante</button>
             <button onclick="document.getElementById('pix-modal').style.display='none'" class="btn-cancel">Cancelar</button>
         </div>
     </div>
