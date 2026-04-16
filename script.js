@@ -44,6 +44,20 @@ function updateUI() {
 document.getElementById('appointment').addEventListener('change', updateUI);
 document.getElementById('client-name').addEventListener('input', updateUI);
 
+function extractFunctionError(error, data) {
+    if (error?.context?.response) {
+        try {
+            const parsed = typeof error.context.response === 'string' ? JSON.parse(error.context.response) : error.context.response;
+            if (parsed?.error) return parsed.error;
+            if (parsed?.message) return parsed.message;
+        } catch (_) {
+            return error.context.response;
+        }
+    }
+    if (data?.error) return data.error;
+    return error?.message || null;
+}
+
 async function confirmBooking() {
     const btn = document.getElementById('confirm-btn');
     btn.textContent = 'A processar...';
@@ -53,31 +67,47 @@ async function confirmBooking() {
     const services = state.selectedServices.map(s => s.name).join(', ');
 
     try {
+        const baseBody = { items: state.selectedServices, customerName: name };
+
         if (state.paymentMethod === 'pix') {
             const { data, error } = await supabaseClient.functions.invoke('criar-pagamento', {
-                body: { items: state.selectedServices, total: state.totalPrice, method: 'pix' }
+                body: { ...baseBody, total: state.totalPrice, method: 'pix' }
             });
 
-            if (error) throw error;
+            const detailedError = extractFunctionError(error, data);
+            if (detailedError) throw new Error(detailedError);
 
-            document.getElementById('qr-code-img').src = `data:image/png;base64,${data.qr_code_base64}`;
-            document.getElementById('pix-copy-paste').value = data.qr_code;
-            document.getElementById('pix-modal').style.display = 'flex';
+            const qrImg = document.getElementById('qr-code-img');
+            const pixInput = document.getElementById('pix-copy-paste');
+            const pixModal = document.getElementById('pix-modal');
+            const btnCheckPayment = document.getElementById('btn-check-payment');
 
-            document.getElementById('btn-check-payment').onclick = () => {
-                const msg = `Olá! Fiz o Pix de R$ ${state.totalPrice.toFixed(2)} para os serviços: ${services}. Cliente: ${name}`;
-                window.open(`https://wa.me/5511915723418?text=${encodeURIComponent(msg)}`, '_blank');
-                location.reload();
-            };
+            if (qrImg && pixInput && pixModal && btnCheckPayment) {
+                qrImg.src = `data:image/png;base64,${data.qr_code_base64}`;
+                pixInput.value = data.qr_code;
+                pixModal.style.display = 'flex';
+
+                btnCheckPayment.onclick = () => {
+                    const msg = `Olá! Fiz o Pix de R$ ${state.totalPrice.toFixed(2)} para os serviços: ${services}. Cliente: ${name}`;
+                    window.open(`https://wa.me/5511915723418?text=${encodeURIComponent(msg)}`, '_blank');
+                    location.reload();
+                };
+            } else {
+                console.warn('Elementos do modal de Pix ausentes. Exibindo fallback.');
+                alert(`Pix gerado. Copie o código abaixo:\n\n${data.qr_code}`);
+            }
+
         } else {
             const { data, error } = await supabaseClient.functions.invoke('criar-pagamento', {
-                body: { items: state.selectedServices, method: 'card' }
+                body: { ...baseBody, method: 'card' }
             });
 
-            if (error) throw error;
+            const detailedError = extractFunctionError(error, data);
+            if (detailedError) throw new Error(detailedError);
             window.location.href = data.init_point;
         }
     } catch (err) {
+        console.error('Erro ao confirmar pagamento', err);
         alert("Erro: " + err.message);
         btn.textContent = 'Confirmar e Pagar';
         btn.disabled = false;

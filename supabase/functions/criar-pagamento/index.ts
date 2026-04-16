@@ -10,7 +10,7 @@ serve(async (req) => {
 
   try {
     const payload = await req.json()
-    const { items, method, total } = payload
+    const { items = [], method, total, customerName, customerEmail, customerDocument } = payload
     const token = Deno.env.get('MP_ACCESS_TOKEN')
 
     if (!token) throw new Error("Token do MP ausente no Supabase")
@@ -19,14 +19,30 @@ serve(async (req) => {
     // FLUXO PIX (Pagamento Direto)
     // ==========================================
     if (method === 'pix') {
+      const normalizedTotal = Number(
+        total ?? items.reduce((acc: number, i: any) => acc + Number(i.price || i.unit_price || 0), 0)
+      )
+      if (!normalizedTotal || Number.isNaN(normalizedTotal) || normalizedTotal <= 0) {
+        throw new Error("Valor do Pix inválido. Informe um total maior que zero.")
+      }
+
+      const safeName = (customerName || "Cliente Premium").trim()
+      const [firstName, ...restName] = safeName.split(" ")
+      const lastName = restName.join(" ") || "Premium"
+      const documentNumber = (customerDocument || "19119119100").replace(/\D/g, "")
+
       const mpPayload = {
-        transaction_amount: Number(total),
+        transaction_amount: normalizedTotal,
         description: "Agendamento Barbearia",
         payment_method_id: "pix",
         payer: {
-          email: "cliente.teste@gmail.com", // MP exige e-mails com formatos válidos/comuns
-          first_name: "Cliente",
-          last_name: "Premium"
+          email: customerEmail || "cliente.pix@barbeariapremium.com", // MP exige e-mails com formatos válidos/comuns
+          first_name: firstName || "Cliente",
+          last_name: lastName,
+          identification: {
+            type: "CPF",
+            number: documentNumber || "19119119100"
+          }
         }
       };
 
@@ -44,8 +60,9 @@ serve(async (req) => {
 
       // TELEMETRIA: Se o MP der erro 400, pegamos o motivo exato
       if (!response.ok) {
-          const mpErrorMsg = data.message || data.cause?.[0]?.description || JSON.stringify(data);
-          throw new Error(`Recusa do MP: ${mpErrorMsg}`);
+          const mpErrorMsg = data.message || data.cause?.[0]?.description || data.error?.message || JSON.stringify(data);
+          console.error("Erro Mercado Pago PIX", { status: response.status, mpError: data });
+          return new Response(JSON.stringify({ error: mpErrorMsg, mp_response: data }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: response.status });
       }
 
       return new Response(JSON.stringify({
@@ -94,6 +111,7 @@ serve(async (req) => {
     }
   } catch (error) {
     // Retorna o erro exato para o Frontend
-    return new Response(JSON.stringify({ error: error.message }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 })
+    console.error("Falha na Edge Function criar-pagamento", error);
+    return new Response(JSON.stringify({ error: error.message, stack: error.stack }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 })
   }
 })
