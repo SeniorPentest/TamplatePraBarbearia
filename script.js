@@ -1,6 +1,4 @@
-// ==========================================
 // CONFIGURAÇÃO DO SUPABASE
-// ==========================================
 const supabaseUrl = 'https://kifhzxrvkfvmjlrtdeif.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpZmh6eHJ2a2Z2bWpscnRkZWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODM5MTcsImV4cCI6MjA5MTc1OTkxN30.z5oZ1KrN7cVkDWdQoL8M5yE8vLPm5h6x5pbvQOcmjaY';
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
@@ -15,9 +13,7 @@ const state = {
     paymentMethod: null
 };
 
-// ==========================================
-// DETETOR DE PAGAMENTO APROVADO (MERCADO PAGO)
-// ==========================================
+// DETECTOR DE PAGAMENTO APROVADO
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('collection_status');
@@ -31,14 +27,11 @@ window.addEventListener('DOMContentLoaded', () => {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     } else if (paymentStatus === 'rejected' || paymentStatus === 'null') {
-        alert("O pagamento não foi concluído. Tenta novamente.");
+        alert("O pagamento não foi concluído. Tente novamente.");
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 });
 
-// ==========================================
-// FUNÇÕES AUXILIARES DA INTERFACE
-// ==========================================
 function formatCurrency(value) {
     return currencyFormatter.format(Number(value) || 0);
 }
@@ -85,7 +78,6 @@ document.querySelectorAll('.payment-button').forEach(btn => {
     });
 });
 
-// Mudança nos Inputs de Data e Profissional
 document.getElementById('appointment')?.addEventListener('change', (e) => {
     state.datetime = e.target.value;
     updateSummary();
@@ -96,9 +88,7 @@ document.getElementById('professional')?.addEventListener('change', (e) => {
     updateSummary();
 });
 
-// ==========================================
-// O GRANDE FINAL: INTEGRAÇÃO MP + WHATSAPP
-// ==========================================
+// INTEGRAÇÃO MP + WHATSAPP
 async function confirmBooking() {
     const btn = document.getElementById('confirm-btn');
     btn.textContent = 'Processando...';
@@ -109,13 +99,11 @@ async function confirmBooking() {
     const professional = state.professional || 'primeiro disponível';
     const paymentLabel = state.paymentMethod === 'pix' ? 'Pix' : state.paymentMethod === 'card' ? 'Cartão' : 'Dinheiro na barbearia';
 
-    // Cria a mensagem, mas NÃO abre o WhatsApp ainda
     const message = `Olá! Sou ${clientName}. Acabei de confirmar e pagar meu agendamento:\n\n*Serviço:* ${state.service}\n*Data:* ${dateLabel}\n*Profissional:* ${professional}\n*Pagamento:* ${paymentLabel}`;
     const whatsappUrl = `https://wa.me/5511915723418?text=${encodeURIComponent(message)}`;
 
     if (state.paymentMethod === 'pix' || state.paymentMethod === 'card') {
         try {
-            // Guarda o link na memória do browser
             localStorage.setItem('zapAgendamento', whatsappUrl);
 
             const { data, error } = await supabaseClient.functions.invoke('criar-pagamento', {
@@ -129,21 +117,19 @@ async function confirmBooking() {
             if (error) throw error;
 
             if (data?.init_point) {
-                // Vai APENAS para o Mercado Pago
                 window.location.href = data.init_point;
             } else {
                 throw new Error('Link não gerado.');
             }
         } catch (err) {
             console.error('Erro:', err);
-            alert('Erro ao gerar pagamento no Mercado Pago. Tenta novamente.');
+            alert('Erro ao gerar pagamento no Mercado Pago. Tente novamente.');
             btn.textContent = 'Confirmar agendamento';
             btn.disabled = false;
         }
     } else {
-        // Pagamento em Dinheiro (Abre o Zap direto, pois não há Mercado Pago)
         window.open(whatsappUrl, '_blank');
-        alert('Agendado com sucesso! Aguardamos por ti na barbearia.');
+        alert('Agendado com sucesso! Te aguardamos na barbearia.');
         btn.textContent = 'Confirmar agendamento';
         btn.disabled = false;
     }
@@ -151,6 +137,5 @@ async function confirmBooking() {
 
 document.getElementById('confirm-btn')?.addEventListener('click', confirmBooking);
 
-// Iniciar com Pix pré-selecionado
 const pixBtn = document.querySelector('.payment-button[data-method="pix"]');
 if (pixBtn) pixBtn.click();
