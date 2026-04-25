@@ -1,5 +1,5 @@
 const supabaseUrl = 'https://kifhzxrvkfvmjlrtdeif.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpZmh6eHJ2a2Z2bWpscnRkZWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODM5MTcsImV4cCI6MjA5MTc1OTkxN30.z5oZ1KrN7cVkDWdQoL8M5yE8vLPm5h6x5pbvQOcmjaY';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpZmh6eHJ2kZ2bWpscnRkZWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODM5MTcsImV4cCI6MjA5MTc1OTkxN30.z5oZ1KrN7cVkDWdQoL8M5yE8vLPm5h6x5pbvQOcmjaY';
 
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
@@ -265,6 +265,7 @@ function updateStats(appointments) {
     const total = appointments.length;
     const confirmed = appointments.filter((item) => item.booking_status === 'confirmed').length;
     const pending = appointments.filter((item) => item.booking_status === 'pending_payment').length;
+
     const revenue = appointments.reduce((sum, item) => {
         if (item.booking_status === 'expired' || item.booking_status === 'cancelled') return sum;
         return sum + Number(item.total_price || 0);
