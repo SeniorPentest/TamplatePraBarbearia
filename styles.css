@@ -243,22 +243,23 @@ body::before {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 38px;
-    width: 38px;
-    height: 38px;
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     color: var(--accent-color);
-    background: rgba(212, 175, 55, 0.08);
-    border: 1px solid rgba(212, 175, 55, 0.28);
-    box-shadow: 0 0 18px rgba(212, 175, 55, 0.10);
+    background: #050505;
+    border: 1px solid rgba(212, 175, 55, 0.42);
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.12);
     overflow: hidden;
 }
 
 .service-icon img {
     display: block;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
+    border-radius: 6px;
 }
 
 .service-icon-test {
@@ -335,8 +336,9 @@ body::before {
 }
 
 .service-card.selected .service-icon {
-    background: rgba(212, 175, 55, 0.18);
-    border-color: rgba(212, 175, 55, 0.65);
+    background: #050505;
+    border-color: rgba(212, 175, 55, 0.8);
+    box-shadow: 0 0 22px rgba(212, 175, 55, 0.20);
 }
 
 .service-card.selected .service-select {
@@ -774,14 +776,14 @@ body::before {
     }
 
     .service-icon {
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
     }
 
     .service-icon img {
-        width: 27px;
-        height: 27px;
+        width: 32px;
+        height: 32px;
     }
 
     .service-card h3 {
