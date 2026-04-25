@@ -22,6 +22,7 @@
                         <span class="brand-name">Barbearia Premium</span>
                     </div>
                 </div>
+
                 <div class="header-meta">
                     <span class="pill pill-ghost">Aberto hoje</span>
                     <span class="pill pill-accent">Agenda expressa</span>
@@ -59,42 +60,72 @@
                 <div class="service-grid">
                     <div class="service-card" data-service="Corte + Barba" data-price="90">
                         <div class="card-head">
-                            <h3>Corte + Barba</h3>
+                            <div class="service-title">
+                                <span class="service-icon">✂️🧔</span>
+                                <h3>Corte + Barba</h3>
+                            </div>
                             <span class="price-tag">R$ 90,00</span>
                         </div>
-                        <button class="service-select">Selecionar</button>
+                        <button class="service-select" type="button">
+                            <span>Selecionar</span>
+                            <span class="select-arrow">→</span>
+                        </button>
                     </div>
 
                     <div class="service-card" data-service="Barba" data-price="55">
                         <div class="card-head">
-                            <h3>Barba</h3>
+                            <div class="service-title">
+                                <span class="service-icon">🧔</span>
+                                <h3>Barba</h3>
+                            </div>
                             <span class="price-tag">R$ 55,00</span>
                         </div>
-                        <button class="service-select">Selecionar</button>
+                        <button class="service-select" type="button">
+                            <span>Selecionar</span>
+                            <span class="select-arrow">→</span>
+                        </button>
                     </div>
 
                     <div class="service-card" data-service="Corte Clássico" data-price="45">
                         <div class="card-head">
-                            <h3>Corte Clássico</h3>
+                            <div class="service-title">
+                                <span class="service-icon">✂️</span>
+                                <h3>Corte Clássico</h3>
+                            </div>
                             <span class="price-tag">R$ 45,00</span>
                         </div>
-                        <button class="service-select">Selecionar</button>
+                        <button class="service-select" type="button">
+                            <span>Selecionar</span>
+                            <span class="select-arrow">→</span>
+                        </button>
                     </div>
 
                     <div class="service-card" data-service="Sobrancelha" data-price="15">
                         <div class="card-head">
-                            <h3>Sobrancelha</h3>
+                            <div class="service-title">
+                                <span class="service-icon">〰️</span>
+                                <h3>Sobrancelha</h3>
+                            </div>
                             <span class="price-tag">R$ 15,00</span>
                         </div>
-                        <button class="service-select">Selecionar</button>
+                        <button class="service-select" type="button">
+                            <span>Selecionar</span>
+                            <span class="select-arrow">→</span>
+                        </button>
                     </div>
 
                     <div class="service-card test-card" data-service="Teste Sistema" data-price="1">
                         <div class="card-head">
-                            <h3>Teste (R$ 1,00)</h3>
+                            <div class="service-title">
+                                <span class="service-icon">🧪</span>
+                                <h3>Teste Sistema</h3>
+                            </div>
                             <span class="price-tag">R$ 1,00</span>
                         </div>
-                        <button class="service-select">Selecionar</button>
+                        <button class="service-select" type="button">
+                            <span>Selecionar</span>
+                            <span class="select-arrow">→</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -165,6 +196,64 @@
 
             <div class="modal-actions">
                 <button class="btn-secondary" id="btn-check-payment" type="button">Já paguei</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-content success-modal-content">
+            <button class="modal-close" id="close-success-modal" aria-label="Fechar modal" type="button">&times;</button>
+
+            <div class="success-icon">✓</div>
+
+            <h3>Agendamento confirmado</h3>
+            <p class="success-subtitle">Seu horário foi reservado com sucesso.</p>
+
+            <div class="success-summary">
+                <div class="success-row">
+                    <span class="success-label">
+                        <span class="success-row-icon">👤</span>
+                        Cliente
+                    </span>
+                    <strong id="success-client">-</strong>
+                </div>
+
+                <div class="success-row">
+                    <span class="success-label">
+                        <span class="success-row-icon">✂️</span>
+                        Serviço
+                    </span>
+                    <strong id="success-services">-</strong>
+                </div>
+
+                <div class="success-row">
+                    <span class="success-label">
+                        <span class="success-row-icon">📅</span>
+                        Data e horário
+                    </span>
+                    <strong id="success-date-time">-</strong>
+                </div>
+
+                <div class="success-row">
+                    <span class="success-label">
+                        <span class="success-row-icon">💳</span>
+                        Pagamento
+                    </span>
+                    <strong id="success-payment">-</strong>
+                </div>
+
+                <div class="success-row success-id-row">
+                    <span class="success-label">
+                        <span class="success-row-icon">#</span>
+                        ID da reserva
+                    </span>
+                    <strong id="success-reservation-id">-</strong>
+                </div>
+            </div>
+
+            <div class="success-actions">
+                <button class="btn btn-primary" id="success-whatsapp-btn" type="button">Falar no WhatsApp</button>
+                <button class="btn-secondary" id="success-new-booking-btn" type="button">Novo agendamento</button>
             </div>
         </div>
     </div>

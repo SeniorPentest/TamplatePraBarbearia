@@ -71,8 +71,6 @@ function generatePixPayload(amount) {
 function normalizeDateTimeWithOffset(value) {
     if (!value || typeof value !== 'string') return value;
 
-    // Corrige formato vindo do PostgreSQL: 2026-04-25T08:00:00-03
-    // para formato ISO válido: 2026-04-25T08:00:00-03:00
     if (/T\d{2}:\d{2}:\d{2}[+-]\d{2}$/.test(value)) {
         return `${value}:00`;
     }
@@ -227,7 +225,6 @@ async function loadAvailabilityByDate(date) {
     }
 }
 
-// Seleção de Serviços
 document.querySelectorAll('.service-card').forEach((card) => {
     card.querySelector('.service-select').addEventListener('click', () => {
         const name = card.dataset.service;
@@ -247,7 +244,6 @@ document.querySelectorAll('.service-card').forEach((card) => {
     });
 });
 
-// Seleção de Pagamento
 document.querySelectorAll('.payment-button').forEach((btn) => {
     btn.addEventListener('click', () => {
         state.paymentMethod = btn.dataset.method;
@@ -352,7 +348,7 @@ async function confirmBooking() {
     btn.textContent = 'Processando...';
     btn.disabled = true;
 
-    const name = document.getElementById('client-name').value;
+    const name = document.getElementById('client-name').value.trim();
     const services = state.selectedServices.map((s) => s.name).join(', ');
     const slotText = formatSlotForDisplay(state.selectedSlot);
 
@@ -384,7 +380,14 @@ async function confirmBooking() {
 
             window.location.href = data.init_point;
         } else if (state.paymentMethod === 'onsite') {
-            alert(`Reserva confirmada para pagar na barbearia.\nID da reserva: ${reservation.appointment_id}`);
+            showSuccessModal({
+                reservationId: reservation.appointment_id,
+                clientName: name,
+                services,
+                slotText,
+                paymentText: 'Pagar na barbearia'
+            });
+
             await loadAvailabilityByDate(state.selectedDate);
         }
     } catch (err) {
@@ -394,6 +397,52 @@ async function confirmBooking() {
         btn.disabled = false;
         updateUI();
     }
+}
+
+function showSuccessModal({ reservationId, clientName, services, slotText, paymentText }) {
+    const modal = document.getElementById('success-modal');
+
+    if (!modal) return;
+
+    document.getElementById('success-client').textContent = clientName || '-';
+    document.getElementById('success-services').textContent = services || '-';
+    document.getElementById('success-date-time').textContent = slotText || '-';
+    document.getElementById('success-payment').textContent = paymentText || '-';
+    document.getElementById('success-reservation-id').textContent = reservationId || '-';
+
+    const whatsappBtn = document.getElementById('success-whatsapp-btn');
+
+    if (whatsappBtn) {
+        whatsappBtn.onclick = () => {
+            const msg = `Olá! Acabei de fazer um agendamento.\nCliente: ${clientName}\nServiços: ${services}\nHorário: ${slotText}\nPagamento: ${paymentText}\nReserva: ${reservationId}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+    }
+
+    modal.classList.add('open');
+}
+
+function closeSuccessModal() {
+    document.getElementById('success-modal')?.classList.remove('open');
+}
+
+function resetBookingForm() {
+    state.selectedServices = [];
+    state.totalPrice = 0;
+    state.selectedSlot = null;
+    state.availabilitySlots = [];
+    state.selectedDate = '';
+
+    document.querySelectorAll('.service-card').forEach((card) => {
+        card.classList.remove('selected');
+    });
+
+    document.getElementById('client-name').value = '';
+    document.getElementById('appointment-date').value = '';
+
+    setAvailability('idle', 'Selecione uma data para ver horários');
+    renderSlots();
+    updateUI();
 }
 
 function copyPixCode() {
@@ -415,6 +464,17 @@ document.getElementById('close-pix-modal')?.addEventListener('click', closePixMo
 
 document.getElementById('pix-modal')?.addEventListener('click', (event) => {
     if (event.target.id === 'pix-modal') closePixModal();
+});
+
+document.getElementById('close-success-modal')?.addEventListener('click', closeSuccessModal);
+
+document.getElementById('success-modal')?.addEventListener('click', (event) => {
+    if (event.target.id === 'success-modal') closeSuccessModal();
+});
+
+document.getElementById('success-new-booking-btn')?.addEventListener('click', () => {
+    closeSuccessModal();
+    resetBookingForm();
 });
 
 renderAvailabilityStatus();
