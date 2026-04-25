@@ -1,5 +1,5 @@
 const supabaseUrl = 'https://kifhzxrvkfvmjlrtdeif.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6ImtpZmh6eHJ2a2Z2bWpscnRkZWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODM5MTcsImV4cCI6MjA5MTc1OTkxN30.z5oZ1KrN7cVkDWdQoL8M5yE8vLPm5h6x5pbvQOcmjaY';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpZmh6eHJ2a2Z2bWpscnRkZWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODM5MTcsImV4cCI6MjA5MTc1OTkxN30.z5oZ1KrN7cVkDWdQoL8M5yE8vLPm5h6x5pbvQOcmjaY';
 
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
@@ -107,7 +107,7 @@ function formatPaymentStatus(status) {
 function getStatusClass(status) {
     if (!status) return 'status-default';
 
-    return `status-${String(status).replaceAll('_', '_')}`;
+    return `status-${String(status)}`;
 }
 
 function setTodayOnFilter() {
