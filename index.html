@@ -14,9 +14,9 @@
 
     <header class="site-header">
         <div class="container header-inner">
-                <div class="brand-block">
-                    <div class="brand">
-                        <img src="maquininha-logo.png" alt="Logo" class="brand-logo-img">
+            <div class="brand-block">
+                <div class="brand">
+                    <img src="maquininha-logo.png" alt="Logo" class="brand-logo-img">
                     <div class="brand-text">
                         <span class="brand-kicker">Studio Masculino</span>
                         <span class="brand-name">Barbearia Premium</span>
@@ -28,10 +28,12 @@
                     <span class="pill pill-ghost">Sem fila</span>
                 </div>
             </div>
+
             <nav class="nav-links">
                 <a href="#servicos">Serviços</a>
                 <a href="#agendar">Agendar</a>
             </nav>
+
             <div class="header-actions">
                 <a href="#agendar" class="btn btn-primary">Agendar Agora</a>
             </div>
@@ -62,6 +64,7 @@
                         </div>
                         <button class="service-select">Selecionar</button>
                     </div>
+
                     <div class="service-card" data-service="Barba" data-price="55">
                         <div class="card-head">
                             <h3>Barba</h3>
@@ -69,6 +72,7 @@
                         </div>
                         <button class="service-select">Selecionar</button>
                     </div>
+
                     <div class="service-card" data-service="Corte Clássico" data-price="45">
                         <div class="card-head">
                             <h3>Corte Clássico</h3>
@@ -76,6 +80,7 @@
                         </div>
                         <button class="service-select">Selecionar</button>
                     </div>
+
                     <div class="service-card" data-service="Sobrancelha" data-price="15">
                         <div class="card-head">
                             <h3>Sobrancelha</h3>
@@ -83,6 +88,7 @@
                         </div>
                         <button class="service-select">Selecionar</button>
                     </div>
+
                     <div class="service-card test-card" data-service="Teste Sistema" data-price="1">
                         <div class="card-head">
                             <h3>Teste (R$ 1,00)</h3>
@@ -99,33 +105,42 @@
                 <div class="booking-grid">
                     <div class="panel">
                         <h3>Seus Dados</h3>
+
                         <div class="field">
-                            <label>Nome Completo</label>
+                            <label for="client-name">Nome Completo</label>
                             <input type="text" id="client-name" placeholder="Como quer ser chamado?">
                         </div>
+
                         <div class="field">
-                            <label>Escolha a Data</label>
+                            <label for="appointment-date">Escolha a Data</label>
                             <input type="date" id="appointment-date">
                         </div>
+
                         <div class="availability-head">
                             <span id="shop-status" class="shop-status status-neutral">Selecione uma data para ver horários</span>
                             <span class="lunch-info">Pausa: 12h às 13h</span>
                         </div>
+
                         <div id="slots-grid" class="slots-grid" aria-live="polite"></div>
                     </div>
+
                     <div class="panel">
                         <h3>Pagamento</h3>
+
                         <div class="payment-methods">
-                            <button class="payment-button active" data-method="pix">Pix</button>
-                            <button class="payment-button" data-method="card">Cartão</button>
-                            <button class="payment-button" data-method="onsite">Pagar na barbearia</button>
+                            <button class="payment-button active" data-method="pix" type="button">Pix</button>
+                            <button class="payment-button" data-method="card" type="button">Cartão</button>
+                            <button class="payment-button" data-method="onsite" type="button">Pagar na barbearia</button>
                         </div>
-                        <p class="onsite-note">Pague presencialmente no dia do atendimento.</p>
+
+                        <p id="payment-message" class="onsite-note">Pagamento via Pix.</p>
+
                         <div class="total-line">
                             <span>Total:</span>
                             <span id="total-value">R$ 0,00</span>
                         </div>
-                        <button id="confirm-btn" class="confirm-btn" disabled>Confirmar Agendamento</button>
+
+                        <button id="confirm-btn" class="confirm-btn" disabled type="button">Confirmar Agendamento</button>
                     </div>
                 </div>
             </div>
@@ -134,16 +149,20 @@
 
     <div id="pix-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close" id="close-pix-modal" aria-label="Fechar modal">&times;</button>
+            <button class="modal-close" id="close-pix-modal" aria-label="Fechar modal" type="button">&times;</button>
+
             <h3>Pagamento via Pix</h3>
             <p>Escaneie o QR Code ou copie o código abaixo para finalizar.</p>
+
             <div class="qr-wrapper">
                 <img id="qr-code-img" alt="QR Code Pix" class="qr-image">
             </div>
+
             <div class="copy-row">
                 <input id="pix-copy-paste" type="text" readonly>
                 <button class="btn btn-primary" id="copy-pix-btn" type="button">Copiar código</button>
             </div>
+
             <div class="modal-actions">
                 <button class="btn-secondary" id="btn-check-payment" type="button">Já paguei</button>
             </div>
