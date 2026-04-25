@@ -6,7 +6,8 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 const state = {
     user: null,
     selectedDate: '',
-    appointments: []
+    appointments: [],
+    isActionLoading: false
 };
 
 const loginScreen = document.getElementById('login-screen');
@@ -106,12 +107,12 @@ function formatPaymentStatus(status) {
 
 function getStatusClass(status) {
     if (!status) return 'status-default';
-
     return `status-${String(status)}`;
 }
 
 function setTodayOnFilter() {
     const now = new Date();
+
     const saoPauloDate = new Intl.DateTimeFormat('en-CA', {
         timeZone: 'America/Sao_Paulo',
         year: 'numeric',
@@ -226,6 +227,11 @@ function renderAppointments() {
         const bookingStatusClass = getStatusClass(appointment.booking_status);
         const paymentStatusClass = getStatusClass(appointment.payment_status);
 
+        const canMarkPaid = appointment.payment_status !== 'approved';
+        const canCancel = !['cancelled', 'completed', 'no_show', 'expired'].includes(appointment.booking_status);
+        const canComplete = appointment.booking_status !== 'completed';
+        const canNoShow = !['cancelled', 'completed', 'no_show'].includes(appointment.booking_status);
+
         return `
             <article class="appointment-row">
                 <div class="appointment-time" data-label="Horário">
@@ -256,6 +262,24 @@ function renderAppointments() {
                 <div data-label="Status">
                     <span class="status-pill ${bookingStatusClass}">${escapeHtml(bookingStatus)}</span>
                 </div>
+
+                <div class="appointment-actions">
+                    <button class="action-btn action-paid" type="button" data-action="mark_paid" data-id="${escapeHtml(appointment.id)}" ${canMarkPaid ? '' : 'disabled'}>
+                        Marcar pago
+                    </button>
+
+                    <button class="action-btn action-complete" type="button" data-action="complete" data-id="${escapeHtml(appointment.id)}" ${canComplete ? '' : 'disabled'}>
+                        Concluir
+                    </button>
+
+                    <button class="action-btn action-noshow" type="button" data-action="no_show" data-id="${escapeHtml(appointment.id)}" ${canNoShow ? '' : 'disabled'}>
+                        Não compareceu
+                    </button>
+
+                    <button class="action-btn action-cancel" type="button" data-action="cancel" data-id="${escapeHtml(appointment.id)}" ${canCancel ? '' : 'disabled'}>
+                        Cancelar
+                    </button>
+                </div>
             </article>
         `;
     }).join('');
@@ -284,6 +308,54 @@ function escapeHtml(value) {
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#039;');
+}
+
+function getActionLabel(action) {
+    const labels = {
+        mark_paid: 'marcar como pago',
+        cancel: 'cancelar',
+        complete: 'concluir',
+        no_show: 'marcar como não compareceu'
+    };
+
+    return labels[action] || action;
+}
+
+async function runAdminAction(appointmentId, action) {
+    if (state.isActionLoading) return;
+
+    const actionLabel = getActionLabel(action);
+    const confirmed = window.confirm(`Tem certeza que deseja ${actionLabel} esta reserva?`);
+
+    if (!confirmed) return;
+
+    state.isActionLoading = true;
+    setLoadStatus('Atualizando reserva...');
+
+    try {
+        const { data, error } = await supabaseClient.functions.invoke('admin-reserva', {
+            body: {
+                appointment_id: appointmentId,
+                action
+            }
+        });
+
+        if (error) {
+            throw new Error(error.message || 'Erro ao atualizar reserva.');
+        }
+
+        if (!data?.ok) {
+            throw new Error(data?.error || 'Erro ao atualizar reserva.');
+        }
+
+        await loadAppointments();
+    } catch (error) {
+        console.error(error);
+        alert(error.message || 'Erro ao atualizar reserva.');
+        setLoadStatus('Erro ao atualizar reserva.');
+    } finally {
+        state.isActionLoading = false;
+    }
 }
 
 async function initializeAdmin() {
@@ -396,5 +468,16 @@ filterDate.addEventListener('change', async (event) => {
 });
 
 refreshBtn.addEventListener('click', loadAppointments);
+
+appointmentsList.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-action][data-id]');
+
+    if (!button) return;
+
+    const appointmentId = button.dataset.id;
+    const action = button.dataset.action;
+
+    await runAdminAction(appointmentId, action);
+});
 
 initializeAdmin();
