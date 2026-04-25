@@ -10,7 +10,12 @@ const MERCHANT_CITY = 'Sao Paulo';
 const state = {
     selectedServices: [],
     totalPrice: 0,
-    paymentMethod: 'pix'
+    paymentMethod: 'pix',
+    selectedDate: '',
+    selectedSlot: null,
+    availabilityStatus: 'idle',
+    availabilityMessage: 'Selecione uma data para ver horários',
+    availabilitySlots: []
 };
 
 function emvField(id, value) {
@@ -59,10 +64,122 @@ function generatePixPayload(amount) {
     return `${payload}${crc}`;
 }
 
-function formatAppointment(value) {
-    if (!value) return '';
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? value : date.toLocaleString('pt-BR');
+function formatDateForDisplay(dateStr) {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    if (!year || !month || !day) return dateStr;
+    return `${day}/${month}/${year}`;
+}
+
+function formatSlotForDisplay(slot) {
+    if (!slot) return '';
+    return `${formatDateForDisplay(state.selectedDate)} às ${slot.time}`;
+}
+
+function setAvailability(status, message) {
+    state.availabilityStatus = status;
+    state.availabilityMessage = message;
+    renderAvailabilityStatus();
+}
+
+function renderAvailabilityStatus() {
+    const statusEl = document.getElementById('shop-status');
+    if (!statusEl) return;
+
+    statusEl.textContent = state.availabilityMessage;
+    statusEl.className = 'shop-status';
+
+    if (state.availabilityStatus === 'open') statusEl.classList.add('status-open');
+    else if (state.availabilityStatus === 'closed') statusEl.classList.add('status-closed');
+    else if (state.availabilityStatus === 'error') statusEl.classList.add('status-error');
+    else statusEl.classList.add('status-neutral');
+}
+
+function renderSlots() {
+    const slotsGrid = document.getElementById('slots-grid');
+    if (!slotsGrid) return;
+
+    slotsGrid.innerHTML = '';
+
+    if (state.availabilityStatus === 'loading') {
+        slotsGrid.innerHTML = '<p class="slots-message">Carregando horários...</p>';
+        return;
+    }
+
+    if (state.availabilityStatus === 'error') {
+        slotsGrid.innerHTML = '<p class="slots-message">Erro ao consultar disponibilidade.</p>';
+        return;
+    }
+
+    if (state.availabilityStatus === 'closed') {
+        slotsGrid.innerHTML = '<p class="slots-message">Barbearia fechada para a data selecionada.</p>';
+        return;
+    }
+
+    if (!state.availabilitySlots.length) {
+        slotsGrid.innerHTML = '<p class="slots-message">Sem horários disponíveis para esta data.</p>';
+        return;
+    }
+
+    state.availabilitySlots.forEach(slot => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot-button';
+        btn.textContent = slot.time;
+        btn.classList.toggle('selected', state.selectedSlot?.start === slot.start);
+
+        btn.addEventListener('click', () => {
+            state.selectedSlot = slot;
+            renderSlots();
+            updateUI();
+        });
+
+        slotsGrid.appendChild(btn);
+    });
+}
+
+async function loadAvailabilityByDate(date) {
+    if (!date) {
+        state.availabilitySlots = [];
+        state.selectedSlot = null;
+        setAvailability('idle', 'Selecione uma data para ver horários');
+        renderSlots();
+        updateUI();
+        return;
+    }
+
+    state.selectedSlot = null;
+    state.availabilitySlots = [];
+    setAvailability('loading', 'Carregando horários...');
+    renderSlots();
+    updateUI();
+
+    try {
+        const response = await fetch(`/functions/v1/disponibilidade?date=${encodeURIComponent(date)}`);
+        if (!response.ok) throw new Error('Falha na consulta de disponibilidade');
+
+        const data = await response.json();
+        const slots = Array.isArray(data?.slots) ? data.slots : [];
+        state.availabilitySlots = slots;
+
+        if (data?.status === 'closed') {
+            setAvailability('closed', 'Barbearia fechada');
+        } else if (!slots.length) {
+            setAvailability('open', 'Sem horários disponíveis');
+        } else {
+            setAvailability('open', 'Barbearia aberta • Escolha um horário');
+        }
+
+        renderSlots();
+    } catch (error) {
+        console.error(error);
+        state.availabilitySlots = [];
+        state.selectedSlot = null;
+        setAvailability('error', 'Erro ao consultar disponibilidade');
+        renderSlots();
+    } finally {
+        updateUI();
+    }
 }
 
 // Seleção de Serviços
@@ -89,16 +206,28 @@ document.querySelectorAll('.payment-button').forEach(btn => {
     btn.addEventListener('click', () => {
         state.paymentMethod = btn.dataset.method;
         document.querySelectorAll('.payment-button').forEach(b => b.classList.toggle('active', b === btn));
+        updateUI();
     });
 });
 
 function updateUI() {
     document.getElementById('total-value').textContent = `R$ ${state.totalPrice.toFixed(2)}`;
-    const ready = state.selectedServices.length > 0 && document.getElementById('appointment').value && document.getElementById('client-name').value;
+
+    const hasServices = state.selectedServices.length > 0;
+    const hasName = Boolean(document.getElementById('client-name').value.trim());
+    const hasDate = Boolean(state.selectedDate);
+    const hasSlot = Boolean(state.selectedSlot?.start && state.selectedSlot?.end);
+    const hasPaymentMethod = Boolean(state.paymentMethod);
+
+    const ready = hasServices && hasName && hasDate && hasSlot && hasPaymentMethod;
     document.getElementById('confirm-btn').disabled = !ready;
 }
 
-document.getElementById('appointment').addEventListener('change', updateUI);
+document.getElementById('appointment-date').addEventListener('change', async (event) => {
+    state.selectedDate = event.target.value;
+    await loadAvailabilityByDate(state.selectedDate);
+});
+
 document.getElementById('client-name').addEventListener('input', updateUI);
 
 async function confirmBooking() {
@@ -108,7 +237,7 @@ async function confirmBooking() {
 
     const name = document.getElementById('client-name').value;
     const services = state.selectedServices.map(s => s.name).join(', ');
-    const appointment = document.getElementById('appointment').value;
+    const slotText = formatSlotForDisplay(state.selectedSlot);
 
     try {
         if (state.paymentMethod === 'pix') {
@@ -120,23 +249,25 @@ async function confirmBooking() {
             document.getElementById('pix-modal').classList.add('open');
 
             document.getElementById('btn-check-payment').onclick = () => {
-                const formattedAppointment = formatAppointment(appointment);
-                const msg = `Olá! Já paguei via Pix.\nCliente: ${name}\nServiços: ${services}\nTotal: R$ ${state.totalPrice.toFixed(2)}${formattedAppointment ? `\nHorário: ${formattedAppointment}` : ''}\nEnvio o comprovante para confirmar?`;
+                const msg = `Olá! Já paguei via Pix.\nCliente: ${name}\nServiços: ${services}\nTotal: R$ ${state.totalPrice.toFixed(2)}${slotText ? `\nHorário: ${slotText}` : ''}\nEnvio o comprovante para confirmar?`;
                 window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
             };
-        } else {
+        } else if (state.paymentMethod === 'card') {
             const { data, error } = await supabaseClient.functions.invoke('criar-pagamento', {
                 body: { items: state.selectedServices, method: 'card', total: state.totalPrice }
             });
 
             if (error) throw error;
             window.location.href = data.init_point;
+        } else if (state.paymentMethod === 'onsite') {
+            alert('Pagamento na barbearia selecionado. A reserva real será implementada no próximo commit.');
         }
     } catch (err) {
-        alert("Erro: " + err.message);
+        alert('Erro: ' + err.message);
     } finally {
         btn.textContent = 'Confirmar Agendamento';
         btn.disabled = false;
+        updateUI();
     }
 }
 
@@ -157,3 +288,7 @@ document.getElementById('close-pix-modal')?.addEventListener('click', closePixMo
 document.getElementById('pix-modal')?.addEventListener('click', (event) => {
     if (event.target.id === 'pix-modal') closePixModal();
 });
+
+renderAvailabilityStatus();
+renderSlots();
+updateUI();

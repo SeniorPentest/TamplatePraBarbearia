@@ -14,17 +14,18 @@
 
     <header class="site-header">
         <div class="container header-inner">
-            <div class="brand-block">
-                <div class="brand">
-                    <img src="maquininha-logo.png" alt="Logo" class="brand-logo-img">
+                <div class="brand-block">
+                    <div class="brand">
+                        <img src="maquininha-logo.png" alt="Logo" class="brand-logo-img">
                     <div class="brand-text">
                         <span class="brand-kicker">Studio Masculino</span>
                         <span class="brand-name">Barbearia Premium</span>
                     </div>
                 </div>
                 <div class="header-meta">
-                    <span class="pill pill-ghost">Aberto hoje • 09h às 20h</span>
-                    <span class="pill pill-accent">Agenda expressa • Sem fila</span>
+                    <span class="pill pill-ghost">Aberto hoje</span>
+                    <span class="pill pill-accent">Agenda expressa</span>
+                    <span class="pill pill-ghost">Sem fila</span>
                 </div>
             </div>
             <nav class="nav-links">
@@ -103,16 +104,23 @@
                             <input type="text" id="client-name" placeholder="Como quer ser chamado?">
                         </div>
                         <div class="field">
-                            <label>Agendamento</label>
-                            <input type="datetime-local" id="appointment">
+                            <label>Escolha a Data</label>
+                            <input type="date" id="appointment-date">
                         </div>
+                        <div class="availability-head">
+                            <span id="shop-status" class="shop-status status-neutral">Selecione uma data para ver horários</span>
+                            <span class="lunch-info">Pausa: 12h às 13h</span>
+                        </div>
+                        <div id="slots-grid" class="slots-grid" aria-live="polite"></div>
                     </div>
                     <div class="panel">
                         <h3>Pagamento</h3>
                         <div class="payment-methods">
                             <button class="payment-button active" data-method="pix">Pix</button>
                             <button class="payment-button" data-method="card">Cartão</button>
+                            <button class="payment-button" data-method="onsite">Pagar na barbearia</button>
                         </div>
+                        <p class="onsite-note">Pague presencialmente no dia do atendimento.</p>
                         <div class="total-line">
                             <span>Total:</span>
                             <span id="total-value">R$ 0,00</span>
