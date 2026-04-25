@@ -33,6 +33,7 @@
             <nav class="nav-links">
                 <a href="#servicos">Serviços</a>
                 <a href="#agendar">Agendar</a>
+                <a href="#informacoes">Informações</a>
             </nav>
 
             <div class="header-actions">
@@ -45,7 +46,7 @@
         <section class="hero-section">
             <div class="container hero-content">
                 <h1>O Teu Estilo, <br>A Nossa Maestria.</h1>
-                <p>Reserva o teu horário com exclusividade. Pagamento direto, sem intermediários no Pix ou segurança total no Cartão.</p>
+                <p>Reserve seu horário com exclusividade. Escolha o serviço, veja os horários disponíveis e finalize com Pix, Cartão ou pagamento presencial.</p>
                 <a href="#agendar" class="btn btn-primary btn-hero">Escolher Horário</a>
             </div>
         </section>
@@ -54,7 +55,7 @@
             <div class="container">
                 <div class="section-head">
                     <h2>Nossos Serviços</h2>
-                    <p>Selecione quantos desejar (Arraste para o lado)</p>
+                    <p>Selecione quantos desejar. No celular, arraste para o lado.</p>
                 </div>
                 
                 <div class="service-grid">
@@ -121,26 +122,17 @@
                             <span class="select-arrow">→</span>
                         </button>
                     </div>
-
-                    <div class="service-card test-card" data-service="Teste Sistema" data-price="1">
-                        <div class="card-head">
-                            <div class="service-title">
-                                <span class="service-icon service-icon-test">T</span>
-                                <h3>Teste Sistema</h3>
-                            </div>
-                            <span class="price-tag">R$ 1,00</span>
-                        </div>
-                        <button class="service-select" type="button">
-                            <span>Selecionar</span>
-                            <span class="select-arrow">→</span>
-                        </button>
-                    </div>
                 </div>
             </div>
         </section>
 
         <section id="agendar" class="section section-booking">
             <div class="container">
+                <div class="section-head booking-head">
+                    <h2>Agende seu horário</h2>
+                    <p>Escolha uma data e veja apenas os horários disponíveis.</p>
+                </div>
+
                 <div class="booking-grid">
                     <div class="panel">
                         <h3>Seus Dados</h3>
@@ -172,7 +164,7 @@
                             <button class="payment-button" data-method="onsite" type="button">Pagar na barbearia</button>
                         </div>
 
-                        <p id="payment-message" class="onsite-note">Pagamento via Pix.</p>
+                        <p id="payment-message" class="onsite-note">Pagamento via Pix. Após pagar, envie o comprovante pelo WhatsApp.</p>
 
                         <div class="total-line">
                             <span>Total:</span>
@@ -180,18 +172,68 @@
                         </div>
 
                         <button id="confirm-btn" class="confirm-btn" disabled type="button">Confirmar Agendamento</button>
+
+                        <p class="booking-note">
+                            Para Pix e Cartão, o horário fica reservado temporariamente enquanto o pagamento é finalizado.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="informacoes" class="section info-section">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Informações</h2>
+                    <p>Tudo que você precisa saber antes de agendar.</p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <span class="info-icon">📍</span>
+                        <h3>Endereço</h3>
+                        <p>Rua Exemplo, 123 — Centro</p>
+                        <p class="info-muted">Altere este endereço depois para o local real da barbearia.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <span class="info-icon">🕒</span>
+                        <h3>Funcionamento</h3>
+                        <p>Segunda a sábado, das 08h às 20h.</p>
+                        <p class="info-muted">Pausa de almoço: 12h às 13h.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <span class="info-icon">💬</span>
+                        <h3>Contato</h3>
+                        <p>WhatsApp: (11) 91572-3418</p>
+                        <p class="info-muted">Use o WhatsApp para dúvidas, comprovantes e cancelamentos.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <span class="info-icon">⚠️</span>
+                        <h3>Política de atraso</h3>
+                        <p>Chegue com alguns minutos de antecedência.</p>
+                        <p class="info-muted">Atrasos acima de 15 minutos podem liberar o horário para outro cliente.</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© 2026 Barbearia Premium. Todos os direitos reservados.</p>
+            <a href="#agendar">Agendar horário</a>
+        </div>
+    </footer>
+
     <div id="pix-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close" id="close-pix-modal" aria-label="Fechar modal" type="button">&times;</button>
 
             <h3>Pagamento via Pix</h3>
-            <p>Escaneie o QR Code ou copie o código abaixo para finalizar.</p>
+            <p>Escaneie o QR Code ou copie o código abaixo. Depois, envie o comprovante pelo WhatsApp para confirmar.</p>
 
             <div class="qr-wrapper">
                 <img id="qr-code-img" alt="QR Code Pix" class="qr-image">
@@ -201,6 +243,10 @@
                 <input id="pix-copy-paste" type="text" readonly>
                 <button class="btn btn-primary" id="copy-pix-btn" type="button">Copiar código</button>
             </div>
+
+            <p class="pix-warning">
+                Seu horário fica reservado por até 15 minutos enquanto aguardamos o pagamento.
+            </p>
 
             <div class="modal-actions">
                 <button class="btn-secondary" id="btn-check-payment" type="button">Já paguei</button>

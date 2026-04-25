@@ -265,7 +265,7 @@ function updatePaymentMessage() {
     if (state.paymentMethod === 'onsite') {
         paymentMessage.textContent = 'Pague presencialmente no dia do atendimento.';
     } else if (state.paymentMethod === 'pix') {
-        paymentMessage.textContent = 'Pagamento via Pix.';
+        paymentMessage.textContent = 'Pagamento via Pix. Após pagar, envie o comprovante pelo WhatsApp.';
     } else if (state.paymentMethod === 'card') {
         paymentMessage.textContent = 'Pagamento seguro com cartão.';
     } else {
@@ -367,6 +367,8 @@ async function confirmBooking() {
                 const msg = `Olá! Já paguei via Pix.\nCliente: ${name}\nServiços: ${services}\nTotal: R$ ${state.totalPrice.toFixed(2)}${slotText ? `\nHorário: ${slotText}` : ''}\nReserva: ${reservation.appointment_id}\nEnvio o comprovante para confirmar?`;
                 window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
             };
+
+            await loadAvailabilityByDate(state.selectedDate);
         } else if (state.paymentMethod === 'card') {
             const { data, error } = await supabaseClient.functions.invoke('criar-pagamento', {
                 body: {

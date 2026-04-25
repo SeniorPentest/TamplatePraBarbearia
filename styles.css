@@ -187,6 +187,10 @@ body::before {
 
 .section-head p { color: var(--text-secondary); }
 
+.booking-head {
+    margin-bottom: 24px;
+}
+
 /* SERVIÇOS */
 .service-grid {
     display: flex;
@@ -260,12 +264,6 @@ body::before {
     height: 32px;
     object-fit: contain;
     border-radius: 6px;
-}
-
-.service-icon-test {
-    color: var(--accent-color);
-    font-weight: 900;
-    font-size: 1rem;
 }
 
 .service-card h3 {
@@ -507,10 +505,29 @@ body::before {
     box-shadow: 0 12px 36px rgba(212, 175, 55, 0.28);
 }
 
-.onsite-note {
+.onsite-note,
+.booking-note,
+.pix-warning {
     color: var(--text-secondary);
     font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.onsite-note {
     margin-bottom: 8px;
+}
+
+.booking-note {
+    margin-top: 12px;
+}
+
+.pix-warning {
+    margin: 10px 0 14px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    color: #f6e8b3;
 }
 
 .total-line {
@@ -523,6 +540,74 @@ body::before {
 
 #total-value {
     font-size: 1.2rem;
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* INFORMAÇÕES */
+.info-section {
+    background: rgba(8, 8, 8, 0.96);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.info-card {
+    background: linear-gradient(145deg, rgba(20, 20, 20, 0.88), rgba(12, 12, 12, 0.94));
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 16px 46px rgba(0, 0, 0, 0.32);
+}
+
+.info-icon {
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(212, 175, 55, 0.10);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    margin-bottom: 14px;
+}
+
+.info-card h3 {
+    font-family: var(--font-serif);
+    margin-bottom: 8px;
+}
+
+.info-card p {
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.info-muted {
+    color: var(--text-secondary) !important;
+    margin-top: 6px;
+    font-size: 0.9rem;
+}
+
+/* FOOTER */
+.site-footer {
+    background: #050505;
+    border-top: 1px solid var(--border-color);
+    padding: 24px 0;
+}
+
+.footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.footer-inner a {
     color: var(--accent-color);
     font-weight: 700;
 }
@@ -811,12 +896,19 @@ body::before {
     .success-modal-content {
         padding: 22px;
     }
+
+    .copy-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
 @media (min-width: 769px) {
     .header-inner { grid-template-columns: auto 1fr auto; gap: 24px; }
     .nav-links { display: flex; align-items: center; gap: 18px; justify-content: center; }
     .payment-methods { grid-template-columns: repeat(3, 1fr); }
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-inner { flex-direction: row; justify-content: space-between; text-align: left; }
 }
 
 @media (min-width: 900px) {
@@ -825,4 +917,5 @@ body::before {
     .booking-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
     .panel { padding: 30px; }
     .slots-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .info-grid { grid-template-columns: repeat(4, 1fr); }
 }
