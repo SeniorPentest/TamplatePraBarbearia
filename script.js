@@ -78,6 +78,33 @@ function normalizeDateTimeWithOffset(value) {
     return value;
 }
 
+function onlyDigits(value) {
+    return String(value || '').replace(/\D/g, '');
+}
+
+function isValidBrazilPhone(value) {
+    const digits = onlyDigits(value);
+    return digits.length >= 10 && digits.length <= 11;
+}
+
+function formatPhoneInput(value) {
+    const digits = onlyDigits(value).slice(0, 11);
+
+    if (digits.length <= 2) {
+        return digits;
+    }
+
+    if (digits.length <= 6) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    }
+
+    if (digits.length <= 10) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+    }
+
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 function formatDateForDisplay(dateStr) {
     if (!dateStr) return '';
 
@@ -278,11 +305,12 @@ function updateUI() {
 
     const hasServices = state.selectedServices.length > 0;
     const hasName = Boolean(document.getElementById('client-name').value.trim());
+    const hasPhone = isValidBrazilPhone(document.getElementById('client-phone').value);
     const hasDate = Boolean(state.selectedDate);
     const hasSlot = Boolean(state.selectedSlot?.start && state.selectedSlot?.end);
     const hasPaymentMethod = Boolean(state.paymentMethod);
 
-    const ready = hasServices && hasName && hasDate && hasSlot && hasPaymentMethod;
+    const ready = hasServices && hasName && hasPhone && hasDate && hasSlot && hasPaymentMethod;
 
     document.getElementById('confirm-btn').disabled = !ready;
 }
@@ -294,9 +322,14 @@ document.getElementById('appointment-date').addEventListener('change', async (ev
 
 document.getElementById('client-name').addEventListener('input', updateUI);
 
+document.getElementById('client-phone').addEventListener('input', (event) => {
+    event.target.value = formatPhoneInput(event.target.value);
+    updateUI();
+});
+
 async function createReservation() {
     const name = document.getElementById('client-name').value.trim();
-    const phone = document.getElementById('client-phone')?.value?.trim() || null;
+    const phone = document.getElementById('client-phone').value.trim();
 
     const paymentMethodMap = {
         pix: 'pix',
@@ -308,6 +341,10 @@ async function createReservation() {
 
     if (!paymentMethod) {
         throw new Error('Método de pagamento inválido.');
+    }
+
+    if (!isValidBrazilPhone(phone)) {
+        throw new Error('Informe um WhatsApp válido.');
     }
 
     if (!state.selectedSlot?.start || !state.selectedSlot?.end) {
@@ -349,6 +386,7 @@ async function confirmBooking() {
     btn.disabled = true;
 
     const name = document.getElementById('client-name').value.trim();
+    const phone = document.getElementById('client-phone').value.trim();
     const services = state.selectedServices.map((s) => s.name).join(', ');
     const slotText = formatSlotForDisplay(state.selectedSlot);
 
@@ -364,7 +402,7 @@ async function confirmBooking() {
             document.getElementById('pix-modal').classList.add('open');
 
             document.getElementById('btn-check-payment').onclick = () => {
-                const msg = `Olá! Já paguei via Pix.\nCliente: ${name}\nServiços: ${services}\nTotal: R$ ${state.totalPrice.toFixed(2)}${slotText ? `\nHorário: ${slotText}` : ''}\nReserva: ${reservation.appointment_id}\nEnvio o comprovante para confirmar?`;
+                const msg = `Olá! Já paguei via Pix.\nCliente: ${name}\nWhatsApp: ${phone}\nServiços: ${services}\nTotal: R$ ${state.totalPrice.toFixed(2)}${slotText ? `\nHorário: ${slotText}` : ''}\nReserva: ${reservation.appointment_id}\nEnvio o comprovante para confirmar?`;
                 window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
             };
 
@@ -385,6 +423,7 @@ async function confirmBooking() {
             showSuccessModal({
                 reservationId: reservation.appointment_id,
                 clientName: name,
+                clientPhone: phone,
                 services,
                 slotText,
                 paymentText: 'Pagar na barbearia'
@@ -401,12 +440,13 @@ async function confirmBooking() {
     }
 }
 
-function showSuccessModal({ reservationId, clientName, services, slotText, paymentText }) {
+function showSuccessModal({ reservationId, clientName, clientPhone, services, slotText, paymentText }) {
     const modal = document.getElementById('success-modal');
 
     if (!modal) return;
 
     document.getElementById('success-client').textContent = clientName || '-';
+    document.getElementById('success-phone').textContent = clientPhone || '-';
     document.getElementById('success-services').textContent = services || '-';
     document.getElementById('success-date-time').textContent = slotText || '-';
     document.getElementById('success-payment').textContent = paymentText || '-';
@@ -416,7 +456,7 @@ function showSuccessModal({ reservationId, clientName, services, slotText, payme
 
     if (whatsappBtn) {
         whatsappBtn.onclick = () => {
-            const msg = `Olá! Acabei de fazer um agendamento.\nCliente: ${clientName}\nServiços: ${services}\nHorário: ${slotText}\nPagamento: ${paymentText}\nReserva: ${reservationId}`;
+            const msg = `Olá! Acabei de fazer um agendamento.\nCliente: ${clientName}\nWhatsApp: ${clientPhone}\nServiços: ${services}\nHorário: ${slotText}\nPagamento: ${paymentText}\nReserva: ${reservationId}`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         };
     }
@@ -440,6 +480,7 @@ function resetBookingForm() {
     });
 
     document.getElementById('client-name').value = '';
+    document.getElementById('client-phone').value = '';
     document.getElementById('appointment-date').value = '';
 
     setAvailability('idle', 'Selecione uma data para ver horários');
