@@ -120,10 +120,82 @@
                         </div>
                     </div>
                 </div>
+
+                <section class="services-admin-section">
+                    <div class="dashboard-head services-admin-head">
+                        <div>
+                            <h2>Serviços</h2>
+                            <p>Gerencie os serviços, preços e disponibilidade no site público.</p>
+                        </div>
+
+                        <button id="refresh-services-btn" class="secondary-btn" type="button">Atualizar serviços</button>
+                    </div>
+
+                    <div class="services-admin-grid">
+                        <form id="service-form" class="service-form-card">
+                            <input id="service-id" type="hidden">
+
+                            <h3 id="service-form-title">Novo serviço</h3>
+
+                            <div class="field">
+                                <label for="service-name">Nome do serviço</label>
+                                <input id="service-name" type="text" placeholder="Ex: Corte Degradê" required>
+                            </div>
+
+                            <div class="service-form-row">
+                                <div class="field">
+                                    <label for="service-price">Preço</label>
+                                    <input id="service-price" type="number" min="0" step="0.01" placeholder="45.00" required>
+                                </div>
+
+                                <div class="field">
+                                    <label for="service-duration">Duração em minutos</label>
+                                    <input id="service-duration" type="number" min="1" step="1" value="45" required>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="service-icon-url">Ícone</label>
+                                <input id="service-icon-url" type="text" placeholder="assets/icons/corte.svg">
+                            </div>
+
+                            <div class="field">
+                                <label for="service-description">Descrição</label>
+                                <input id="service-description" type="text" placeholder="Descrição curta do serviço">
+                            </div>
+
+                            <div class="service-form-row">
+                                <div class="field">
+                                    <label for="service-sort">Ordem</label>
+                                    <input id="service-sort" type="number" step="1" value="0">
+                                </div>
+
+                                <label class="checkbox-field">
+                                    <input id="service-active" type="checkbox" checked>
+                                    <span>Ativo no site</span>
+                                </label>
+                            </div>
+
+                            <div class="service-form-actions">
+                                <button id="service-submit-btn" class="primary-btn" type="submit">Salvar serviço</button>
+                                <button id="service-cancel-edit-btn" class="ghost-btn" type="button">Cancelar edição</button>
+                            </div>
+
+                            <p id="services-status" class="form-error"></p>
+                        </form>
+
+                        <div class="services-list-card">
+                            <h3>Serviços cadastrados</h3>
+                            <div id="services-admin-list" class="services-admin-list">
+                                <div class="empty-state">Carregando serviços...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </section>
         </section>
     </main>
 
-    <script src="admin.js?v=6"></script>
+    <script src="admin.js?v=9"></script>
 </body>
 </html>

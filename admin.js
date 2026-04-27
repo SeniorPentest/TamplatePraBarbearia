@@ -7,7 +7,9 @@ const state = {
     user: null,
     selectedDate: '',
     appointments: [],
-    isActionLoading: false
+    services: [],
+    isActionLoading: false,
+    isServiceSaving: false
 };
 
 const loginScreen = document.getElementById('login-screen');
@@ -26,6 +28,22 @@ const statTotal = document.getElementById('stat-total');
 const statConfirmed = document.getElementById('stat-confirmed');
 const statPending = document.getElementById('stat-pending');
 const statRevenue = document.getElementById('stat-revenue');
+
+const serviceForm = document.getElementById('service-form');
+const serviceFormTitle = document.getElementById('service-form-title');
+const serviceIdInput = document.getElementById('service-id');
+const serviceNameInput = document.getElementById('service-name');
+const servicePriceInput = document.getElementById('service-price');
+const serviceDurationInput = document.getElementById('service-duration');
+const serviceIconUrlInput = document.getElementById('service-icon-url');
+const serviceDescriptionInput = document.getElementById('service-description');
+const serviceSortInput = document.getElementById('service-sort');
+const serviceActiveInput = document.getElementById('service-active');
+const serviceSubmitBtn = document.getElementById('service-submit-btn');
+const serviceCancelEditBtn = document.getElementById('service-cancel-edit-btn');
+const servicesStatus = document.getElementById('services-status');
+const refreshServicesBtn = document.getElementById('refresh-services-btn');
+const servicesAdminList = document.getElementById('services-admin-list');
 
 function formatCurrency(value) {
     return Number(value || 0).toLocaleString('pt-BR', {
@@ -110,6 +128,15 @@ function getStatusClass(status) {
     return `status-${String(status)}`;
 }
 
+function escapeHtml(value) {
+    return String(value || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
 function setTodayOnFilter() {
     const now = new Date();
 
@@ -150,6 +177,13 @@ function setLoginError(message) {
 
 function setLoadStatus(message) {
     loadStatus.textContent = message || '';
+}
+
+function setServicesStatus(message, isError = false) {
+    if (!servicesStatus) return;
+
+    servicesStatus.textContent = message || '';
+    servicesStatus.style.color = isError ? 'var(--danger-color)' : 'var(--success-color)';
 }
 
 async function checkIsAdmin(userId) {
@@ -301,15 +335,6 @@ function updateStats(appointments) {
     statRevenue.textContent = formatCurrency(revenue);
 }
 
-function escapeHtml(value) {
-    return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-}
-
 function getActionLabel(action) {
     const labels = {
         mark_paid: 'marcar como pago',
@@ -358,6 +383,204 @@ async function runAdminAction(appointmentId, action) {
     }
 }
 
+async function loadAdminServices() {
+    if (!servicesAdminList) return;
+
+    servicesAdminList.innerHTML = '<div class="empty-state">Carregando serviços...</div>';
+    setServicesStatus('');
+
+    const { data, error } = await supabaseClient
+        .from('services')
+        .select('id, name, price, duration_minutes, icon_url, description, is_active, sort_order, created_at, updated_at')
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error(error);
+        servicesAdminList.innerHTML = `<div class="empty-state">Erro ao carregar serviços: ${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    state.services = Array.isArray(data) ? data : [];
+    renderAdminServices();
+}
+
+function renderAdminServices() {
+    if (!servicesAdminList) return;
+
+    if (!state.services.length) {
+        servicesAdminList.innerHTML = '<div class="empty-state">Nenhum serviço cadastrado.</div>';
+        return;
+    }
+
+    servicesAdminList.innerHTML = state.services.map((service) => {
+        const icon = service.icon_url
+            ? `<img src="${escapeHtml(service.icon_url)}" alt="">`
+            : '✂️';
+
+        const statusClass = service.is_active ? 'service-status-active' : 'service-status-inactive';
+        const statusText = service.is_active ? 'Ativo no site' : 'Inativo no site';
+
+        return `
+            <article class="admin-service-item">
+                <div class="admin-service-icon">
+                    ${icon}
+                </div>
+
+                <div class="admin-service-info">
+                    <strong>${escapeHtml(service.name)}</strong>
+                    <span>${formatCurrency(service.price)} • ${Number(service.duration_minutes || 45)} min • Ordem ${Number(service.sort_order || 0)}</span>
+                    <span class="${statusClass}">${statusText}</span>
+                    ${service.description ? `<span>${escapeHtml(service.description)}</span>` : ''}
+                </div>
+
+                <div class="admin-service-actions">
+                    <button type="button" data-service-action="edit" data-id="${escapeHtml(service.id)}">Editar</button>
+                    <button type="button" data-service-action="toggle" data-id="${escapeHtml(service.id)}">
+                        ${service.is_active ? 'Desativar' : 'Ativar'}
+                    </button>
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+
+function resetServiceForm() {
+    if (!serviceForm) return;
+
+    serviceForm.reset();
+
+    serviceIdInput.value = '';
+    serviceDurationInput.value = '45';
+    serviceSortInput.value = '0';
+    serviceActiveInput.checked = true;
+    serviceFormTitle.textContent = 'Novo serviço';
+    serviceSubmitBtn.textContent = 'Salvar serviço';
+    setServicesStatus('');
+}
+
+function fillServiceForm(service) {
+    serviceIdInput.value = service.id;
+    serviceNameInput.value = service.name || '';
+    servicePriceInput.value = Number(service.price || 0).toFixed(2);
+    serviceDurationInput.value = Number(service.duration_minutes || 45);
+    serviceIconUrlInput.value = service.icon_url || '';
+    serviceDescriptionInput.value = service.description || '';
+    serviceSortInput.value = Number(service.sort_order || 0);
+    serviceActiveInput.checked = Boolean(service.is_active);
+
+    serviceFormTitle.textContent = 'Editar serviço';
+    serviceSubmitBtn.textContent = 'Salvar alterações';
+    setServicesStatus('Editando serviço selecionado.');
+
+    serviceForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function getServicePayloadFromForm() {
+    const name = serviceNameInput.value.trim();
+    const price = Number(servicePriceInput.value);
+    const duration = Number(serviceDurationInput.value);
+    const sortOrder = Number(serviceSortInput.value || 0);
+    const iconUrl = serviceIconUrlInput.value.trim();
+    const description = serviceDescriptionInput.value.trim();
+
+    if (!name) {
+        throw new Error('Informe o nome do serviço.');
+    }
+
+    if (!Number.isFinite(price) || price < 0) {
+        throw new Error('Informe um preço válido.');
+    }
+
+    if (!Number.isFinite(duration) || duration <= 0) {
+        throw new Error('Informe uma duração válida.');
+    }
+
+    return {
+        name,
+        price,
+        duration_minutes: Math.round(duration),
+        icon_url: iconUrl || null,
+        description: description || null,
+        is_active: serviceActiveInput.checked,
+        sort_order: Number.isFinite(sortOrder) ? Math.round(sortOrder) : 0
+    };
+}
+
+async function saveService(event) {
+    event.preventDefault();
+
+    if (state.isServiceSaving) return;
+
+    state.isServiceSaving = true;
+    serviceSubmitBtn.disabled = true;
+    serviceSubmitBtn.textContent = 'Salvando...';
+    setServicesStatus('');
+
+    try {
+        const serviceId = serviceIdInput.value.trim();
+        const payload = getServicePayloadFromForm();
+
+        if (serviceId) {
+            const { error } = await supabaseClient
+                .from('services')
+                .update(payload)
+                .eq('id', serviceId);
+
+            if (error) throw error;
+
+            setServicesStatus('Serviço atualizado com sucesso.');
+        } else {
+            const { error } = await supabaseClient
+                .from('services')
+                .insert(payload);
+
+            if (error) throw error;
+
+            setServicesStatus('Serviço criado com sucesso.');
+        }
+
+        resetServiceForm();
+        await loadAdminServices();
+    } catch (error) {
+        console.error(error);
+        setServicesStatus(error.message || 'Erro ao salvar serviço.', true);
+    } finally {
+        state.isServiceSaving = false;
+        serviceSubmitBtn.disabled = false;
+        serviceSubmitBtn.textContent = serviceIdInput.value ? 'Salvar alterações' : 'Salvar serviço';
+    }
+}
+
+async function toggleServiceActive(serviceId) {
+    const service = state.services.find((item) => item.id === serviceId);
+
+    if (!service) return;
+
+    const nextActive = !service.is_active;
+    const actionText = nextActive ? 'ativar' : 'desativar';
+
+    const confirmed = window.confirm(`Tem certeza que deseja ${actionText} este serviço?`);
+
+    if (!confirmed) return;
+
+    setServicesStatus('Atualizando serviço...');
+
+    const { error } = await supabaseClient
+        .from('services')
+        .update({ is_active: nextActive })
+        .eq('id', serviceId);
+
+    if (error) {
+        console.error(error);
+        setServicesStatus(error.message || 'Erro ao atualizar serviço.', true);
+        return;
+    }
+
+    setServicesStatus(nextActive ? 'Serviço ativado.' : 'Serviço desativado.');
+    await loadAdminServices();
+}
+
 async function initializeAdmin() {
     const { data, error } = await supabaseClient.auth.getSession();
 
@@ -393,7 +616,10 @@ async function initializeAdmin() {
             setTodayOnFilter();
         }
 
-        await loadAppointments();
+        await Promise.all([
+            loadAppointments(),
+            loadAdminServices()
+        ]);
     } catch (error) {
         console.error(error);
         showLogin();
@@ -443,7 +669,10 @@ loginForm.addEventListener('submit', async (event) => {
             setTodayOnFilter();
         }
 
-        await loadAppointments();
+        await Promise.all([
+            loadAppointments(),
+            loadAdminServices()
+        ]);
     } catch (error) {
         console.error(error);
         setLoginError(error.message || 'Erro ao fazer login.');
@@ -458,6 +687,7 @@ logoutBtn.addEventListener('click', async () => {
 
     state.user = null;
     state.appointments = [];
+    state.services = [];
 
     showLogin();
 });
@@ -478,6 +708,31 @@ appointmentsList.addEventListener('click', async (event) => {
     const action = button.dataset.action;
 
     await runAdminAction(appointmentId, action);
+});
+
+serviceForm?.addEventListener('submit', saveService);
+
+serviceCancelEditBtn?.addEventListener('click', resetServiceForm);
+
+refreshServicesBtn?.addEventListener('click', loadAdminServices);
+
+servicesAdminList?.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-service-action][data-id]');
+
+    if (!button) return;
+
+    const serviceId = button.dataset.id;
+    const action = button.dataset.serviceAction;
+
+    if (action === 'edit') {
+        const service = state.services.find((item) => item.id === serviceId);
+        if (service) fillServiceForm(service);
+        return;
+    }
+
+    if (action === 'toggle') {
+        await toggleServiceActive(serviceId);
+    }
 });
 
 initializeAdmin();
