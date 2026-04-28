@@ -905,3 +905,147 @@ button {
         flex: 1;
     }
 }
+
+/* ADMIN BUSINESS HOURS */
+.business-hours-section {
+    margin-top: 38px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.business-hours-head {
+    margin-bottom: 18px;
+}
+
+.business-hours-card {
+    background: linear-gradient(145deg, rgba(22, 22, 22, 0.92), rgba(12, 12, 12, 0.96));
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 18px 58px rgba(0, 0, 0, 0.32);
+}
+
+.business-hours-list {
+    display: grid;
+    gap: 12px;
+}
+
+.business-hour-item {
+    display: grid;
+    grid-template-columns: 1.2fr repeat(6, minmax(110px, 1fr)) auto;
+    gap: 10px;
+    align-items: end;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.business-hour-day {
+    display: grid;
+    gap: 8px;
+}
+
+.business-hour-day strong {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.business-hour-day label,
+.business-hour-field label {
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+}
+
+.business-hour-open {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.business-hour-open input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--accent-color);
+}
+
+.business-hour-field {
+    display: grid;
+    gap: 6px;
+}
+
+.business-hour-field input {
+    width: 100%;
+    min-height: 38px;
+    padding: 8px 9px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: rgba(8, 8, 8, 0.95);
+    color: var(--text-primary);
+    outline: none;
+}
+
+.business-hour-field input:focus {
+    border-color: rgba(212, 175, 55, 0.75);
+}
+
+.business-hour-lunch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.business-hour-lunch input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--accent-color);
+}
+
+.business-hour-save {
+    min-height: 38px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.42);
+    background: rgba(212, 175, 55, 0.10);
+    color: var(--accent-color);
+    font-size: 0.78rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.business-hour-save:hover {
+    background: rgba(212, 175, 55, 0.16);
+}
+
+.business-hour-item.closed-day {
+    opacity: 0.68;
+}
+
+@media (max-width: 1100px) {
+    .business-hour-item {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .business-hour-day {
+        grid-column: 1 / -1;
+    }
+
+    .business-hour-save {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}
+
+@media (max-width: 620px) {
+    .business-hour-item {
+        grid-template-columns: 1fr;
+    }
+}

@@ -8,6 +8,7 @@ const state = {
     selectedDate: '',
     appointments: [],
     services: [],
+    businessHours: [],
     isActionLoading: false,
     isServiceSaving: false
 };
@@ -44,6 +45,10 @@ const serviceCancelEditBtn = document.getElementById('service-cancel-edit-btn');
 const servicesStatus = document.getElementById('services-status');
 const refreshServicesBtn = document.getElementById('refresh-services-btn');
 const servicesAdminList = document.getElementById('services-admin-list');
+
+const refreshBusinessHoursBtn = document.getElementById('refresh-business-hours-btn');
+const businessHoursList = document.getElementById('business-hours-list');
+const businessHoursStatus = document.getElementById('business-hours-status');
 
 function formatCurrency(value) {
     return Number(value || 0).toLocaleString('pt-BR', {
@@ -581,6 +586,173 @@ async function toggleServiceActive(serviceId) {
     await loadAdminServices();
 }
 
+
+function setBusinessHoursStatus(message, isError = false) {
+    if (!businessHoursStatus) return;
+
+    businessHoursStatus.textContent = message || '';
+    businessHoursStatus.style.color = isError ? 'var(--danger-color)' : 'var(--success-color)';
+}
+
+function formatTimeInputValue(value) {
+    if (!value) return '';
+    return String(value).slice(0, 5);
+}
+
+async function loadBusinessHours() {
+    if (!businessHoursList) return;
+
+    businessHoursList.innerHTML = '<div class="empty-state">Carregando horários...</div>';
+    setBusinessHoursStatus('');
+
+    const { data, error } = await supabaseClient
+        .from('business_hours')
+        .select('weekday, weekday_name, is_open, opening_time, closing_time, has_lunch_break, lunch_start, lunch_end, slot_duration_minutes')
+        .order('weekday', { ascending: true });
+
+    if (error) {
+        console.error(error);
+        businessHoursList.innerHTML = `<div class="empty-state">Erro ao carregar horários: ${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    state.businessHours = Array.isArray(data) ? data : [];
+    renderBusinessHours();
+}
+
+function renderBusinessHours() {
+    if (!businessHoursList) return;
+
+    if (!state.businessHours.length) {
+        businessHoursList.innerHTML = '<div class="empty-state">Nenhum horário cadastrado.</div>';
+        return;
+    }
+
+    businessHoursList.innerHTML = state.businessHours.map((item) => {
+        const closedClass = item.is_open ? '' : 'closed-day';
+
+        return `
+            <article class="business-hour-item ${closedClass}" data-weekday="${Number(item.weekday)}">
+                <div class="business-hour-day">
+                    <strong>${escapeHtml(item.weekday_name)}</strong>
+
+                    <label class="business-hour-open">
+                        <input type="checkbox" data-hour-field="is_open" ${item.is_open ? 'checked' : ''}>
+                        <span>Aberto neste dia</span>
+                    </label>
+                </div>
+
+                <div class="business-hour-field">
+                    <label>Abertura</label>
+                    <input type="time" data-hour-field="opening_time" value="${escapeHtml(formatTimeInputValue(item.opening_time))}">
+                </div>
+
+                <div class="business-hour-field">
+                    <label>Fechamento</label>
+                    <input type="time" data-hour-field="closing_time" value="${escapeHtml(formatTimeInputValue(item.closing_time))}">
+                </div>
+
+                <label class="business-hour-lunch">
+                    <input type="checkbox" data-hour-field="has_lunch_break" ${item.has_lunch_break ? 'checked' : ''}>
+                    <span>Pausa</span>
+                </label>
+
+                <div class="business-hour-field">
+                    <label>Início pausa</label>
+                    <input type="time" data-hour-field="lunch_start" value="${escapeHtml(formatTimeInputValue(item.lunch_start))}">
+                </div>
+
+                <div class="business-hour-field">
+                    <label>Fim pausa</label>
+                    <input type="time" data-hour-field="lunch_end" value="${escapeHtml(formatTimeInputValue(item.lunch_end))}">
+                </div>
+
+                <div class="business-hour-field">
+                    <label>Duração</label>
+                    <input type="number" min="1" step="1" data-hour-field="slot_duration_minutes" value="${Number(item.slot_duration_minutes || 45)}">
+                </div>
+
+                <button class="business-hour-save" type="button" data-hour-action="save">
+                    Salvar
+                </button>
+            </article>
+        `;
+    }).join('');
+}
+
+function getBusinessHourPayload(row) {
+    const isOpenInput = row.querySelector('[data-hour-field="is_open"]');
+    const openingInput = row.querySelector('[data-hour-field="opening_time"]');
+    const closingInput = row.querySelector('[data-hour-field="closing_time"]');
+    const hasLunchInput = row.querySelector('[data-hour-field="has_lunch_break"]');
+    const lunchStartInput = row.querySelector('[data-hour-field="lunch_start"]');
+    const lunchEndInput = row.querySelector('[data-hour-field="lunch_end"]');
+    const durationInput = row.querySelector('[data-hour-field="slot_duration_minutes"]');
+
+    const openingTime = openingInput.value;
+    const closingTime = closingInput.value;
+    const lunchStart = lunchStartInput.value;
+    const lunchEnd = lunchEndInput.value;
+    const duration = Number(durationInput.value);
+
+    if (!openingTime || !closingTime) {
+        throw new Error('Informe abertura e fechamento.');
+    }
+
+    if (openingTime >= closingTime) {
+        throw new Error('A abertura precisa ser antes do fechamento.');
+    }
+
+    if (hasLunchInput.checked) {
+        if (!lunchStart || !lunchEnd) {
+            throw new Error('Informe início e fim da pausa.');
+        }
+
+        if (lunchStart >= lunchEnd) {
+            throw new Error('O início da pausa precisa ser antes do fim.');
+        }
+    }
+
+    if (!Number.isFinite(duration) || duration <= 0) {
+        throw new Error('Informe uma duração válida.');
+    }
+
+    return {
+        is_open: isOpenInput.checked,
+        opening_time: openingTime,
+        closing_time: closingTime,
+        has_lunch_break: hasLunchInput.checked,
+        lunch_start: lunchStart || '12:00',
+        lunch_end: lunchEnd || '13:00',
+        slot_duration_minutes: Math.round(duration)
+    };
+}
+
+async function saveBusinessHour(row) {
+    const weekday = Number(row.dataset.weekday);
+
+    if (!Number.isInteger(weekday)) return;
+
+    setBusinessHoursStatus('Salvando horário...');
+
+    try {
+        const payload = getBusinessHourPayload(row);
+
+        const { error } = await supabaseClient
+            .from('business_hours')
+            .update(payload)
+            .eq('weekday', weekday);
+
+        if (error) throw error;
+
+        setBusinessHoursStatus('Horário atualizado com sucesso.');
+        await loadBusinessHours();
+    } catch (error) {
+        console.error(error);
+        setBusinessHoursStatus(error.message || 'Erro ao salvar horário.', true);
+    }
+}
+
 async function initializeAdmin() {
     const { data, error } = await supabaseClient.auth.getSession();
 
@@ -618,7 +790,8 @@ async function initializeAdmin() {
 
         await Promise.all([
             loadAppointments(),
-            loadAdminServices()
+            loadAdminServices(),
+            loadBusinessHours()
         ]);
     } catch (error) {
         console.error(error);
@@ -671,7 +844,8 @@ loginForm.addEventListener('submit', async (event) => {
 
         await Promise.all([
             loadAppointments(),
-            loadAdminServices()
+            loadAdminServices(),
+            loadBusinessHours()
         ]);
     } catch (error) {
         console.error(error);
@@ -688,6 +862,7 @@ logoutBtn.addEventListener('click', async () => {
     state.user = null;
     state.appointments = [];
     state.services = [];
+    state.businessHours = [];
 
     showLogin();
 });
@@ -715,6 +890,30 @@ serviceForm?.addEventListener('submit', saveService);
 serviceCancelEditBtn?.addEventListener('click', resetServiceForm);
 
 refreshServicesBtn?.addEventListener('click', loadAdminServices);
+
+refreshBusinessHoursBtn?.addEventListener('click', loadBusinessHours);
+
+businessHoursList?.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-hour-action="save"]');
+
+    if (!button) return;
+
+    const row = button.closest('.business-hour-item');
+
+    if (!row) return;
+
+    await saveBusinessHour(row);
+});
+
+businessHoursList?.addEventListener('change', (event) => {
+    const row = event.target.closest('.business-hour-item');
+
+    if (!row) return;
+
+    const isOpenInput = row.querySelector('[data-hour-field="is_open"]');
+
+    row.classList.toggle('closed-day', !isOpenInput.checked);
+});
 
 servicesAdminList?.addEventListener('click', async (event) => {
     const button = event.target.closest('[data-service-action][data-id]');
