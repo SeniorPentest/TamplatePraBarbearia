@@ -6,9 +6,20 @@ type AdminAction =
   | "complete"
   | "no_show";
 
+type FinalPaymentMethod =
+  | "cash"
+  | "pix"
+  | "debit"
+  | "credit"
+  | "courtesy"
+  | "other";
+
 type AdminReservaPayload = {
   appointment_id: string;
   action: AdminAction;
+  final_payment_method?: FinalPaymentMethod;
+  final_total?: number;
+  admin_notes?: string;
 };
 
 const corsHeaders = {
@@ -46,30 +57,61 @@ function validatePayload(
     return { ok: false, message: "Ação inválida." };
   }
 
+  const validFinalPaymentMethods: FinalPaymentMethod[] = [
+    "cash",
+    "pix",
+    "debit",
+    "credit",
+    "courtesy",
+    "other",
+  ];
+
+  if (
+    payload.final_payment_method &&
+    !validFinalPaymentMethods.includes(payload.final_payment_method)
+  ) {
+    return { ok: false, message: "Forma de pagamento final inválida." };
+  }
+
+  if (
+    payload.final_total !== undefined &&
+    (!Number.isFinite(payload.final_total) || payload.final_total < 0)
+  ) {
+    return { ok: false, message: "Valor final inválido." };
+  }
+
   return { ok: true, data: payload };
 }
 
-function getUpdateForAction(action: AdminAction) {
-  if (action === "mark_paid") {
+function getUpdateForAction(payload: AdminReservaPayload) {
+  const now = new Date().toISOString();
+
+  if (payload.action === "mark_paid") {
     return {
       payment_status: "approved",
+      paid_at: now,
     };
   }
 
-  if (action === "cancel") {
+  if (payload.action === "cancel") {
     return {
       booking_status: "cancelled",
     };
   }
 
-  if (action === "complete") {
+  if (payload.action === "complete") {
     return {
       booking_status: "completed",
       payment_status: "approved",
+      final_payment_method: payload.final_payment_method ?? "other",
+      final_total: payload.final_total ?? null,
+      paid_at: now,
+      completed_at: now,
+      admin_notes: payload.admin_notes || null,
     };
   }
 
-  if (action === "no_show") {
+  if (payload.action === "no_show") {
     return {
       booking_status: "no_show",
     };
@@ -141,8 +183,8 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: validation.message }, 400);
     }
 
-    const { appointment_id, action } = validation.data;
-    const updatePayload = getUpdateForAction(action);
+    const payload = validation.data;
+    const updatePayload = getUpdateForAction(payload);
 
     const { data: appointment, error: updateError } = await serviceClient
       .from("appointments")
@@ -150,12 +192,18 @@ Deno.serve(async (req) => {
         ...updatePayload,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", appointment_id)
+      .eq("id", payload.appointment_id)
       .select(`
         id,
         client_name,
+        client_phone,
         selected_services,
         total_price,
+        final_payment_method,
+        final_total,
+        paid_at,
+        completed_at,
+        admin_notes,
         appointment_start,
         appointment_end,
         payment_method,

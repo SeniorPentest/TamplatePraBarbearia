@@ -371,13 +371,83 @@ function getActionLabel(action) {
     return labels[action] || action;
 }
 
+
+function normalizeMoneyInput(value) {
+    return String(value || '')
+        .replace(/\s/g, '')
+        .replace('R$', '')
+        .replace(',', '.');
+}
+
+function getCompletionPayload() {
+    const paymentMap = {
+        '1': 'cash',
+        '2': 'pix',
+        '3': 'debit',
+        '4': 'credit',
+        '5': 'courtesy',
+        '6': 'other'
+    };
+
+    const paymentChoice = window.prompt(
+        'Forma de pagamento real:\n\n1 - Dinheiro\n2 - Pix\n3 - Débito\n4 - Crédito\n5 - Cortesia\n6 - Outro\n\nDigite o número:',
+        '2'
+    );
+
+    if (paymentChoice === null) return null;
+
+    const finalPaymentMethod = paymentMap[String(paymentChoice).trim()];
+
+    if (!finalPaymentMethod) {
+        alert('Forma de pagamento inválida.');
+        return null;
+    }
+
+    const finalTotalText = window.prompt(
+        'Valor final recebido:\n\nExemplo: 45,00',
+        ''
+    );
+
+    if (finalTotalText === null) return null;
+
+    const finalTotal = Number(normalizeMoneyInput(finalTotalText));
+
+    if (!Number.isFinite(finalTotal) || finalTotal < 0) {
+        alert('Valor final inválido.');
+        return null;
+    }
+
+    const adminNotes = window.prompt(
+        'Observação interna, se tiver:',
+        ''
+    );
+
+    if (adminNotes === null) return null;
+
+    return {
+        final_payment_method: finalPaymentMethod,
+        final_total: finalTotal,
+        admin_notes: adminNotes.trim()
+    };
+}
+
 async function runAdminAction(appointmentId, action) {
     if (state.isActionLoading) return;
 
     const actionLabel = getActionLabel(action);
-    const confirmed = window.confirm(`Tem certeza que deseja ${actionLabel} esta reserva?`);
+    let extraPayload = {};
 
-    if (!confirmed) return;
+    if (action === 'complete') {
+        const completionPayload = getCompletionPayload();
+
+        if (!completionPayload) return;
+
+        extraPayload = completionPayload;
+    } else {
+        const confirmed = window.confirm(`Tem certeza que deseja ${actionLabel} esta reserva?`);
+
+        if (!confirmed) return;
+    }
 
     state.isActionLoading = true;
     setLoadStatus('Atualizando reserva...');
@@ -386,7 +456,8 @@ async function runAdminAction(appointmentId, action) {
         const { data, error } = await supabaseClient.functions.invoke('admin-reserva', {
             body: {
                 appointment_id: appointmentId,
-                action
+                action,
+                ...extraPayload
             }
         });
 
