@@ -928,8 +928,7 @@ function setProfileStatus(message, isError = false) {
     profileStatus.style.color = isError ? 'var(--danger-color)' : 'var(--success-color)';
 }
 
-async function loadBarbershopProfileAdmin(),
-            loadProfessionals() {
+async function loadBarbershopProfileAdmin() {
     if (!profileForm) return;
 
     setProfileStatus('Carregando dados...');
