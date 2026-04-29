@@ -239,6 +239,7 @@ Deno.serve(async (req) => {
       appointment_start: startIso,
       appointment_end: endIso,
       payment_method: payload.payment_method,
+      professional_id: payload.professional_id || null,
       payment_status: "pending",
       booking_status: isPayAtShop ? "confirmed" : "pending_payment",
       expires_at: expiresAt,
@@ -247,7 +248,7 @@ Deno.serve(async (req) => {
     const { data: created, error: createError } = await supabase
       .from("appointments")
       .insert(insertPayload)
-      .select("id, booking_status, payment_status, payment_method, expires_at, appointment_start, appointment_end")
+      .select("id, professional_id, booking_status, payment_status, payment_method, expires_at, appointment_start, appointment_end")
       .single();
 
     if (createError) {
@@ -265,6 +266,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({
       appointment_id: created.id,
+      professional_id: created.professional_id,
       booking_status: created.booking_status,
       payment_status: created.payment_status,
       payment_method: created.payment_method,
