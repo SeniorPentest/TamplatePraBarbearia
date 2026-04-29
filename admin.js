@@ -4,6 +4,7 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 const state = {
+    profile: null,
     user: null,
     selectedDate: '',
     appointments: [],
@@ -49,6 +50,25 @@ const servicesAdminList = document.getElementById('services-admin-list');
 const refreshBusinessHoursBtn = document.getElementById('refresh-business-hours-btn');
 const businessHoursList = document.getElementById('business-hours-list');
 const businessHoursStatus = document.getElementById('business-hours-status');
+
+const refreshProfileBtn = document.getElementById('refresh-profile-btn');
+const profileForm = document.getElementById('profile-form');
+const profileIdInput = document.getElementById('profile-id');
+const profileNameInput = document.getElementById('profile-name');
+const profileSubtitleInput = document.getElementById('profile-subtitle');
+const profileLogoUrlInput = document.getElementById('profile-logo-url');
+const profileInstagramUrlInput = document.getElementById('profile-instagram-url');
+const profileWhatsappNumberInput = document.getElementById('profile-whatsapp-number');
+const profilePixKeyInput = document.getElementById('profile-pix-key');
+const profileAddressInput = document.getElementById('profile-address');
+const profileCityInput = document.getElementById('profile-city');
+const profileHeroTitleInput = document.getElementById('profile-hero-title');
+const profileHeroDescriptionInput = document.getElementById('profile-hero-description');
+const profilePaymentPixInput = document.getElementById('profile-payment-pix');
+const profilePaymentCardInput = document.getElementById('profile-payment-card');
+const profilePaymentOnsiteInput = document.getElementById('profile-payment-onsite');
+const profileSubmitBtn = document.getElementById('profile-submit-btn');
+const profileStatus = document.getElementById('profile-status');
 
 function formatCurrency(value) {
     return Number(value || 0).toLocaleString('pt-BR', {
@@ -753,6 +773,136 @@ async function saveBusinessHour(row) {
     }
 }
 
+
+function setProfileStatus(message, isError = false) {
+    if (!profileStatus) return;
+
+    profileStatus.textContent = message || '';
+    profileStatus.style.color = isError ? 'var(--danger-color)' : 'var(--success-color)';
+}
+
+async function loadBarbershopProfileAdmin() {
+    if (!profileForm) return;
+
+    setProfileStatus('Carregando dados...');
+
+    const { data, error } = await supabaseClient
+        .from('barbershop_profile')
+        .select(`
+            id,
+            name,
+            subtitle,
+            hero_title,
+            hero_description,
+            logo_url,
+            instagram_url,
+            whatsapp_number,
+            pix_key,
+            address,
+            city,
+            payment_pix_enabled,
+            payment_card_enabled,
+            payment_onsite_enabled,
+            is_active
+        `)
+        .eq('is_active', true)
+        .limit(1)
+        .maybeSingle();
+
+    if (error) {
+        console.error(error);
+        setProfileStatus(error.message || 'Erro ao carregar dados.', true);
+        return;
+    }
+
+    if (!data) {
+        setProfileStatus('Nenhum perfil ativo encontrado.', true);
+        return;
+    }
+
+    state.profile = data;
+    fillProfileForm(data);
+    setProfileStatus('');
+}
+
+function fillProfileForm(profile) {
+    profileIdInput.value = profile.id || '';
+    profileNameInput.value = profile.name || '';
+    profileSubtitleInput.value = profile.subtitle || '';
+    profileLogoUrlInput.value = profile.logo_url || '';
+    profileInstagramUrlInput.value = profile.instagram_url || '';
+    profileWhatsappNumberInput.value = profile.whatsapp_number || '';
+    profilePixKeyInput.value = profile.pix_key || '';
+    profileAddressInput.value = profile.address || '';
+    profileCityInput.value = profile.city || '';
+    profileHeroTitleInput.value = profile.hero_title || '';
+    profileHeroDescriptionInput.value = profile.hero_description || '';
+    profilePaymentPixInput.checked = profile.payment_pix_enabled !== false;
+    profilePaymentCardInput.checked = profile.payment_card_enabled !== false;
+    profilePaymentOnsiteInput.checked = profile.payment_onsite_enabled !== false;
+}
+
+function getProfilePayloadFromForm() {
+    const name = profileNameInput.value.trim();
+
+    if (!name) {
+        throw new Error('Informe o nome da barbearia.');
+    }
+
+    return {
+        name,
+        subtitle: profileSubtitleInput.value.trim() || null,
+        logo_url: profileLogoUrlInput.value.trim() || null,
+        instagram_url: profileInstagramUrlInput.value.trim() || null,
+        whatsapp_number: profileWhatsappNumberInput.value.trim() || null,
+        pix_key: profilePixKeyInput.value.trim() || null,
+        address: profileAddressInput.value.trim() || null,
+        city: profileCityInput.value.trim() || null,
+        hero_title: profileHeroTitleInput.value.trim() || null,
+        hero_description: profileHeroDescriptionInput.value.trim() || null,
+        payment_pix_enabled: profilePaymentPixInput.checked,
+        payment_card_enabled: profilePaymentCardInput.checked,
+        payment_onsite_enabled: profilePaymentOnsiteInput.checked
+    };
+}
+
+async function saveBarbershopProfile(event) {
+    event.preventDefault();
+
+    if (!profileForm) return;
+
+    const profileId = profileIdInput.value.trim();
+
+    if (!profileId) {
+        setProfileStatus('Perfil não carregado. Clique em Atualizar dados.', true);
+        return;
+    }
+
+    profileSubmitBtn.disabled = true;
+    profileSubmitBtn.textContent = 'Salvando...';
+    setProfileStatus('');
+
+    try {
+        const payload = getProfilePayloadFromForm();
+
+        const { error } = await supabaseClient
+            .from('barbershop_profile')
+            .update(payload)
+            .eq('id', profileId);
+
+        if (error) throw error;
+
+        setProfileStatus('Dados da barbearia atualizados com sucesso.');
+        await loadBarbershopProfileAdmin();
+    } catch (error) {
+        console.error(error);
+        setProfileStatus(error.message || 'Erro ao salvar dados.', true);
+    } finally {
+        profileSubmitBtn.disabled = false;
+        profileSubmitBtn.textContent = 'Salvar dados';
+    }
+}
+
 async function initializeAdmin() {
     const { data, error } = await supabaseClient.auth.getSession();
 
@@ -791,7 +941,8 @@ async function initializeAdmin() {
         await Promise.all([
             loadAppointments(),
             loadAdminServices(),
-            loadBusinessHours()
+            loadBusinessHours(),
+            loadBarbershopProfileAdmin()
         ]);
     } catch (error) {
         console.error(error);
@@ -845,7 +996,8 @@ loginForm.addEventListener('submit', async (event) => {
         await Promise.all([
             loadAppointments(),
             loadAdminServices(),
-            loadBusinessHours()
+            loadBusinessHours(),
+            loadBarbershopProfileAdmin()
         ]);
     } catch (error) {
         console.error(error);
@@ -863,6 +1015,7 @@ logoutBtn.addEventListener('click', async () => {
     state.appointments = [];
     state.services = [];
     state.businessHours = [];
+    state.profile = null;
 
     showLogin();
 });
@@ -892,6 +1045,10 @@ serviceCancelEditBtn?.addEventListener('click', resetServiceForm);
 refreshServicesBtn?.addEventListener('click', loadAdminServices);
 
 refreshBusinessHoursBtn?.addEventListener('click', loadBusinessHours);
+
+refreshProfileBtn?.addEventListener('click', loadBarbershopProfileAdmin);
+
+profileForm?.addEventListener('submit', saveBarbershopProfile);
 
 businessHoursList?.addEventListener('click', async (event) => {
     const button = event.target.closest('[data-hour-action="save"]');

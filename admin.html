@@ -211,10 +211,104 @@
                         <p id="business-hours-status" class="form-error"></p>
                     </div>
                 </section>
+
+                <section class="profile-admin-section">
+                    <div class="dashboard-head profile-admin-head">
+                        <div>
+                            <h2>Dados da barbearia</h2>
+                            <p>Altere nome, logo, contato, endereço, Pix e formas de pagamento do site.</p>
+                        </div>
+
+                        <button id="refresh-profile-btn" class="secondary-btn" type="button">Atualizar dados</button>
+                    </div>
+
+                    <form id="profile-form" class="profile-form-card">
+                        <input id="profile-id" type="hidden">
+
+                        <div class="profile-form-grid">
+                            <div class="field">
+                                <label for="profile-name">Nome da barbearia</label>
+                                <input id="profile-name" type="text" placeholder="Barbearia Premium" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="profile-subtitle">Subtítulo</label>
+                                <input id="profile-subtitle" type="text" placeholder="Studio Masculino">
+                            </div>
+
+                            <div class="field">
+                                <label for="profile-logo-url">Logo</label>
+                                <input id="profile-logo-url" type="text" placeholder="maquininha-logo.png">
+                            </div>
+
+                            <div class="field">
+                                <label for="profile-instagram-url">Instagram</label>
+                                <input id="profile-instagram-url" type="text" placeholder="https://instagram.com/suabarbearia">
+                            </div>
+
+                            <div class="field">
+                                <label for="profile-whatsapp-number">WhatsApp</label>
+                                <input id="profile-whatsapp-number" type="text" placeholder="5511999999999">
+                            </div>
+
+                            <div class="field">
+                                <label for="profile-pix-key">Chave Pix</label>
+                                <input id="profile-pix-key" type="text" placeholder="5511999999999">
+                            </div>
+
+                            <div class="field">
+                                <label for="profile-address">Endereço</label>
+                                <input id="profile-address" type="text" placeholder="Rua Exemplo, 123 — Centro">
+                            </div>
+
+                            <div class="field">
+                                <label for="profile-city">Cidade</label>
+                                <input id="profile-city" type="text" placeholder="Sao Paulo">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="profile-hero-title">Título principal</label>
+                            <input id="profile-hero-title" type="text" placeholder="O Teu Estilo, A Nossa Maestria.">
+                        </div>
+
+                        <div class="field">
+                            <label for="profile-hero-description">Descrição principal</label>
+                            <input id="profile-hero-description" type="text" placeholder="Reserve seu horário com exclusividade.">
+                        </div>
+
+                        <div class="profile-payment-box">
+                            <h3>Formas de pagamento ativas</h3>
+
+                            <div class="profile-payment-options">
+                                <label class="checkbox-field">
+                                    <input id="profile-payment-pix" type="checkbox" checked>
+                                    <span>Pix</span>
+                                </label>
+
+                                <label class="checkbox-field">
+                                    <input id="profile-payment-card" type="checkbox" checked>
+                                    <span>Cartão</span>
+                                </label>
+
+                                <label class="checkbox-field">
+                                    <input id="profile-payment-onsite" type="checkbox" checked>
+                                    <span>Pagar na barbearia</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="service-form-actions">
+                            <button id="profile-submit-btn" class="primary-btn" type="submit">Salvar dados</button>
+                        </div>
+
+                        <p id="profile-status" class="form-error"></p>
+                    </form>
+                </section>
             </section>
         </section>
     </main>
 
-    <script src="admin.js?v=11"></script>
+    <script src="admin.js?v=12"></script>
 </body>
 </html>
