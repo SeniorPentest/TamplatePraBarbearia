@@ -392,7 +392,7 @@ function renderAppointments() {
                         const commission = calculateCommission(appointment);
                         return `<span>Comissão: ${commission.percent.toFixed(2).replace('.', ',')}% • ${formatCurrency(commission.commissionValue)} | Barbearia: ${formatCurrency(commission.shopValue)}</span>`;
                     })() : ''}
-                    <span>ID: ${escapeHtml(appointment.id)}</span>
+
                 </div>
 
                 <div class="appointment-value" data-label="Valor">
