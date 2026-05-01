@@ -131,6 +131,13 @@ function formatDate(value) {
     });
 }
 
+
+function getProfessionalById(professionalId) {
+    if (!professionalId) return null;
+
+    return state.professionals.find((professional) => professional.id === professionalId) || null;
+}
+
 function formatServices(services) {
     if (!Array.isArray(services) || services.length === 0) return '-';
 
@@ -287,11 +294,6 @@ async function loadAppointments() {
             completed_at,
             admin_notes,
             professional_id,
-            professionals (
-                id,
-                name,
-                commission_percent
-            ),
             appointment_start,
             appointment_end,
             payment_method,
@@ -353,7 +355,7 @@ function renderAppointments() {
 
                 <div class="appointment-service" data-label="Serviço">
                     <strong>${escapeHtml(services)}</strong>
-                    <span>Profissional: ${escapeHtml(appointment.professionals?.name || 'Não definido')}</span>
+                    <span>Profissional: ${escapeHtml(getProfessionalById(appointment.professional_id)?.name || 'Não definido')}</span>
                     <span>ID: ${escapeHtml(appointment.id)}</span>
                 </div>
 
