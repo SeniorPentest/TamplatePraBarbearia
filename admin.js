@@ -11,6 +11,7 @@ const state = {
     services: [],
     businessHours: [],
     professionals: [],
+    professionalsById: {},
     isActionLoading: false,
     isServiceSaving: false
 };
@@ -135,7 +136,19 @@ function formatDate(value) {
 function getProfessionalById(professionalId) {
     if (!professionalId) return null;
 
-    return state.professionals.find((professional) => professional.id === professionalId) || null;
+    return state.professionalsById?.[professionalId]
+        || state.professionals.find((professional) => professional.id === professionalId)
+        || null;
+}
+
+function formatProfessionalName(professionalId) {
+    if (!professionalId) return 'Não definido';
+
+    const professional = getProfessionalById(professionalId);
+
+    if (professional?.name) return professional.name;
+
+    return `Não encontrado (${String(professionalId).slice(0, 8)}...)`;
 }
 
 function formatServices(services) {
@@ -359,7 +372,7 @@ function renderAppointments() {
 
                 <div class="appointment-service" data-label="Serviço">
                     <strong>${escapeHtml(services)}</strong>
-                    <span>Profissional: ${escapeHtml(getProfessionalById(appointment.professional_id)?.name || 'Não definido')}</span>
+                    <span>Profissional: ${escapeHtml(formatProfessionalName(appointment.professional_id))}</span>
                     <span>ID: ${escapeHtml(appointment.id)}</span>
                 </div>
 
@@ -1091,6 +1104,9 @@ async function loadProfessionals() {
     }
 
     state.professionals = Array.isArray(data) ? data : [];
+    state.professionalsById = Object.fromEntries(
+        state.professionals.map((professional) => [professional.id, professional])
+    );
     renderProfessionals();
 }
 
@@ -1378,6 +1394,7 @@ logoutBtn.addEventListener('click', async () => {
     state.businessHours = [];
     state.profile = null;
     state.professionals = [];
+    state.professionalsById = {};
 
     showLogin();
 });
