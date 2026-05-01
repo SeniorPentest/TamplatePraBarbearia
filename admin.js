@@ -40,6 +40,7 @@ const cashDebit = document.getElementById('cash-debit');
 const cashCredit = document.getElementById('cash-credit');
 const cashCourtesy = document.getElementById('cash-courtesy');
 const cashCompletedCount = document.getElementById('cash-completed-count');
+const commissionSummaryList = document.getElementById('commission-summary-list');
 
 const serviceForm = document.getElementById('service-form');
 const serviceFormTitle = document.getElementById('service-form-title');
@@ -433,6 +434,56 @@ function renderAppointments() {
     }).join('');
 }
 
+
+function renderCommissionSummary(appointments) {
+    if (!commissionSummaryList) return;
+
+    const completedAppointments = appointments.filter((appointment) => {
+        return appointment.booking_status === 'completed' && appointment.professional_id;
+    });
+
+    if (!completedAppointments.length) {
+        commissionSummaryList.innerHTML = '<div class="empty-state">Nenhuma comissão calculada para esta data.</div>';
+        return;
+    }
+
+    const summaryByProfessional = {};
+
+    completedAppointments.forEach((appointment) => {
+        const professionalId = appointment.professional_id;
+        const professionalName = formatProfessionalName(professionalId);
+        const commission = calculateCommission(appointment);
+        const baseValue = Number(appointment.final_total ?? appointment.total_price ?? 0);
+
+        if (!summaryByProfessional[professionalId]) {
+            summaryByProfessional[professionalId] = {
+                name: professionalName,
+                count: 0,
+                revenue: 0,
+                commission: 0,
+                shop: 0
+            };
+        }
+
+        summaryByProfessional[professionalId].count += 1;
+        summaryByProfessional[professionalId].revenue += baseValue;
+        summaryByProfessional[professionalId].commission += commission.commissionValue;
+        summaryByProfessional[professionalId].shop += commission.shopValue;
+    });
+
+    commissionSummaryList.innerHTML = Object.values(summaryByProfessional).map((item) => {
+        return `
+            <article class="commission-card">
+                <strong>${escapeHtml(item.name)}</strong>
+                <span>Atendimentos: ${item.count}</span>
+                <span>Faturamento: ${formatCurrency(item.revenue)}</span>
+                <span class="commission-value">Comissão: ${formatCurrency(item.commission)}</span>
+                <span>Barbearia: ${formatCurrency(item.shop)}</span>
+            </article>
+        `;
+    }).join('');
+}
+
 function updateStats(appointments) {
     const total = appointments.length;
     const confirmed = appointments.filter((item) => item.booking_status === 'confirmed').length;
@@ -479,6 +530,8 @@ function updateStats(appointments) {
     if (cashCredit) cashCredit.textContent = formatCurrency(cashSummary.credit);
     if (cashCourtesy) cashCourtesy.textContent = formatCurrency(cashSummary.courtesy);
     if (cashCompletedCount) cashCompletedCount.textContent = String(completedAppointments.length);
+
+    renderCommissionSummary(appointments);
 }
 
 function getActionLabel(action) {
