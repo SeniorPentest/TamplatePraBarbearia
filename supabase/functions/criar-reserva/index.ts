@@ -225,6 +225,25 @@ Deno.serve(async (req) => {
       });
     }
 
+    let resolvedProfessionalId = payload.professional_id || null;
+
+    if (!resolvedProfessionalId) {
+      const { data: defaultProfessional, error: defaultProfessionalError } = await supabase
+        .from("professionals")
+        .select("id")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true })
+        .order("name", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      if (defaultProfessionalError) {
+        throw new Error(defaultProfessionalError.message || "Falha ao buscar profissional padrão");
+      }
+
+      resolvedProfessionalId = defaultProfessional?.id || null;
+    }
+
     const isPayAtShop = payload.payment_method === "pay_at_shop";
     const expiresAt = isPayAtShop
       ? null
@@ -239,7 +258,7 @@ Deno.serve(async (req) => {
       appointment_start: startIso,
       appointment_end: endIso,
       payment_method: payload.payment_method,
-      professional_id: payload.professional_id || null,
+      professional_id: resolvedProfessionalId,
       payment_status: "pending",
       booking_status: isPayAtShop ? "confirmed" : "pending_payment",
       expires_at: expiresAt,
