@@ -1287,12 +1287,13 @@ async function initializeAdmin() {
             setTodayOnFilter();
         }
 
+        await loadProfessionals();
+
         await Promise.all([
             loadAppointments(),
             loadAdminServices(),
             loadBusinessHours(),
-            loadBarbershopProfileAdmin(),
-            loadProfessionals()
+            loadBarbershopProfileAdmin()
         ]);
     } catch (error) {
         console.error(error);
@@ -1343,12 +1344,13 @@ loginForm.addEventListener('submit', async (event) => {
             setTodayOnFilter();
         }
 
+        await loadProfessionals();
+
         await Promise.all([
             loadAppointments(),
             loadAdminServices(),
             loadBusinessHours(),
-            loadBarbershopProfileAdmin(),
-            loadProfessionals()
+            loadBarbershopProfileAdmin()
         ]);
     } catch (error) {
         console.error(error);
